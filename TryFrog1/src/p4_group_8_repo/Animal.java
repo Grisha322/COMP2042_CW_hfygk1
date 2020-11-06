@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 
 
 public class Animal extends Actor {
-	Image imgW1;
+	Image imgW1;	//too many parameters
 	Image imgA1;
 	Image imgS1;
 	Image imgD1;
@@ -32,10 +32,11 @@ public class Animal extends Actor {
 	int carD = 0;
 	double w = 800;
 	ArrayList<End> inter = new ArrayList<End>();
+	
+	
 	public Animal(String imageLink) {
 		setImage(new Image(imageLink, imgSize, imgSize, true, true));
-		setX(300);
-		setY(679.8+movement);
+		moveToDefaultLocation();
 		imgW1 = new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true);
 		imgA1 = new Image("file:src/p4_group_8_repo/froggerLeft.png", imgSize, imgSize, true, true);
 		imgS1 = new Image("file:src/p4_group_8_repo/froggerDown.png", imgSize, imgSize, true, true);
@@ -133,14 +134,7 @@ public class Animal extends Actor {
 	
 	@Override
 	public void act(long now) {
-		int bounds = 0;
-		if (getY()<0 || getY()>734) {
-			setX(300);
-			setY(679.8+movement);
-		}
-		if (getX()<0) {
-			move(movement*2, 0);
-		}
+		checkSolveOutOfBoundsEvent();
 		if (carDeath) {
 			noMove = true;
 			if ((now)% 11 ==0) {
@@ -156,8 +150,7 @@ public class Animal extends Actor {
 				setImage(new Image("file:src/p4_group_8_repo/cardeath3.png", imgSize, imgSize, true, true));
 			}
 			if (carD == 4) {
-				setX(300);
-				setY(679.8+movement);
+				moveToDefaultLocation();
 				carDeath = false;
 				carD = 0;
 				setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
@@ -187,8 +180,7 @@ public class Animal extends Actor {
 				setImage(new Image("file:src/p4_group_8_repo/waterdeath4.png", imgSize,imgSize , true, true));
 			}
 			if (carD == 5) {
-				setX(300);
-				setY(679.8+movement);
+				moveToDefaultLocation();
 				waterDeath = false;
 				carD = 0;
 				setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
@@ -201,9 +193,7 @@ public class Animal extends Actor {
 			
 		}
 		
-		if (getX()>600) {
-			move(-movement*2, 0);
-		}
+		
 		if (getIntersectingObjects(Obstacle.class).size() >= 1) {
 			carDeath = true;
 		}
@@ -237,13 +227,11 @@ public class Animal extends Actor {
 			w=800;
 			getIntersectingObjects(End.class).get(0).setEnd();
 			end++;
-			setX(300);
-			setY(679.8+movement);
+			moveToDefaultLocation();
 		}
 		else if (getY()<413){
 			waterDeath = true;
-			//setX(300);
-			//setY(679.8+movement);
+			//moveToDefaultLocation
 		}
 	}
 	public boolean getStop() {
@@ -262,6 +250,20 @@ public class Animal extends Actor {
 		return false;
 		
 	}
-	
-
+	public void checkSolveOutOfBoundsEvent() {
+		if (getY()<0 || getY()>734) {
+			moveToDefaultLocation();
+		}
+		if (getX()<0) {
+			move(movement*2, 0);
+		}
+		else if (getX()>600) {
+			move(-movement*2, 0);
+		}
+	}
+	public void moveToDefaultLocation(){
+		setX(300);
+		setY(679.8+movement);
+		return;
+	}
 }
