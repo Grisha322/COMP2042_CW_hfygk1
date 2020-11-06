@@ -136,61 +136,10 @@ public class Animal extends Actor {
 	public void act(long now) {
 		checkSolveOutOfBoundsEvent();
 		if (carDeath) {
-			noMove = true;
-			if ((now)% 11 ==0) {
-				carD++;
-			}
-			if (carD==1) {
-				setImage(new Image("file:src/p4_group_8_repo/cardeath1.png", imgSize, imgSize, true, true));
-			}
-			if (carD==2) {
-				setImage(new Image("file:src/p4_group_8_repo/cardeath2.png", imgSize, imgSize, true, true));
-			}
-			if (carD==3) {
-				setImage(new Image("file:src/p4_group_8_repo/cardeath3.png", imgSize, imgSize, true, true));
-			}
-			if (carD == 4) {
-				moveToDefaultLocation();
-				carDeath = false;
-				carD = 0;
-				setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
-				noMove = false;
-				if (points>50) {
-					points-=50;
-					changeScore = true;
-				}
-			}
-			
+			carDeathAnimation(now);
 		}
 		if (waterDeath) {
-			noMove = true;
-			if ((now)% 11 ==0) {
-				carD++;
-			}
-			if (carD==1) {
-				setImage(new Image("file:src/p4_group_8_repo/waterdeath1.png", imgSize,imgSize , true, true));
-			}
-			if (carD==2) {
-				setImage(new Image("file:src/p4_group_8_repo/waterdeath2.png", imgSize,imgSize , true, true));
-			}
-			if (carD==3) {
-				setImage(new Image("file:src/p4_group_8_repo/waterdeath3.png", imgSize,imgSize , true, true));
-			}
-			if (carD == 4) {
-				setImage(new Image("file:src/p4_group_8_repo/waterdeath4.png", imgSize,imgSize , true, true));
-			}
-			if (carD == 5) {
-				moveToDefaultLocation();
-				waterDeath = false;
-				carD = 0;
-				setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
-				noMove = false;
-				if (points>50) {
-					points-=50;
-					changeScore = true;
-				}
-			}
-			
+			waterDeathAnimation(now);
 		}
 		
 		
@@ -241,7 +190,61 @@ public class Animal extends Actor {
 	public int getPoints() {
 		return points;
 	}
-	
+	public void carDeathAnimation(long now) {
+		noMove = true;
+		if ((now)% 11 ==0) {
+			carD++;
+		}
+		if (carD==1) {
+			setImage(new Image("file:src/p4_group_8_repo/cardeath1.png", imgSize, imgSize, true, true));
+		}
+		if (carD==2) {
+			setImage(new Image("file:src/p4_group_8_repo/cardeath2.png", imgSize, imgSize, true, true));
+		}
+		if (carD==3) {
+			setImage(new Image("file:src/p4_group_8_repo/cardeath3.png", imgSize, imgSize, true, true));
+		}
+		if (carD == 4) {
+			moveToDefaultLocation();
+			carDeath = false;
+			carD = 0;
+			setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
+			noMove = false;
+			if (points>50) {
+				points-=50;
+				changeScore = true;
+			}
+		}
+	}
+	public void waterDeathAnimation(long now) {
+		noMove = true;
+		if ((now)% 11 ==0) {
+			carD++;
+		}
+		if (carD==1) {
+			setImage(new Image("file:src/p4_group_8_repo/waterdeath1.png", imgSize,imgSize , true, true));
+		}
+		if (carD==2) {
+			setImage(new Image("file:src/p4_group_8_repo/waterdeath2.png", imgSize,imgSize , true, true));
+		}
+		if (carD==3) {
+			setImage(new Image("file:src/p4_group_8_repo/waterdeath3.png", imgSize,imgSize , true, true));
+		}
+		if (carD == 4) {
+			setImage(new Image("file:src/p4_group_8_repo/waterdeath4.png", imgSize,imgSize , true, true));
+		}
+		if (carD == 5) {
+			moveToDefaultLocation();
+			waterDeath = false;
+			carD = 0;
+			setImage(new Image("file:src/p4_group_8_repo/froggerUp.png", imgSize, imgSize, true, true));
+			noMove = false;
+			if (points>50) {
+				points-=50;
+				changeScore = true;
+			}
+		}
+	}
 	public boolean changeScore() {
 		if (changeScore) {
 			changeScore = false;
