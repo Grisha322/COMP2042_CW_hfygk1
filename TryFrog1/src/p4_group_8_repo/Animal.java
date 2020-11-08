@@ -1,7 +1,5 @@
 package p4_group_8_repo;
 
-import java.util.ArrayList;
-
 import javafx.event.EventHandler;
 
 import javafx.scene.image.Image;
@@ -31,7 +29,7 @@ public class Animal extends Actor {
 	boolean changeScore = false;
 	int carD = 0;
 	double w = 800;
-	ArrayList<End> inter = new ArrayList<End>();
+	
 	
 	
 	public Animal(String imageLink) {
@@ -166,7 +164,6 @@ public class Animal extends Actor {
 			}
 		}
 		else if (getIntersectingObjects(End.class).size() >= 1) {
-			inter = (ArrayList<End>) getIntersectingObjects(End.class);
 			if (getIntersectingObjects(End.class).get(0).isActivated()) {
 				end--;
 				points-=50;
