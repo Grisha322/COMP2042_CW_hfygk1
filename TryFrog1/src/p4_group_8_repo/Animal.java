@@ -4,95 +4,111 @@ import javafx.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.util.Duration;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
+import javafx.util.Duration;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 
 
-public class Animal extends Actor {
-	Image ActorImage;
+public class Animal extends MovingActor {
 	int points = 0;
 	int end = 0;
 	boolean Busy = false;
-	double movement = 13.3333333*2;
-	double movementX = 10.666666*2;
-	int imgSize = 40;
-	boolean carDeath = false;
-	boolean waterDeath = false;
-	boolean stop = false;
+	private double startXPos;
+	private double startYPos;
+	private final double movement = 13.3333333*2;
+	private final double movementX = 10.666666*2;
 	boolean changeScore = false;
-	int carD = 0;
-	double w = 800;
+	double checkPoint = 800;
 	
-	public Animal(String imageLink) {
+	public Animal(String imageLink, double size, double startXPos, double startYPos) {
 		
-		ActorImage = new Image(imageLink, imgSize, imgSize, true, true);
+		super(imageLink, size, startXPos, startYPos);
 		
-		RestoreDefaults(); 
+		this.startXPos = startXPos;
+		
+		this.startYPos = startYPos;
 		
 		setOnKeyPressed( getKeyPressedHandler() );	
-		
-		setOnKeyReleased(event -> {
-			Busy = false;
-		});
 		
 	}
 	
 	@Override
 	public void act(long now) {
 		HandleOutOfBoundsEvent();
-		if(Busy) {
+		
+		HandleInteractions();
+	}
+	
+	public void HandleInteractions() {
+		List<Actor> actors = getIntersectingObjects(Actor.class);
+		
+		final boolean ReachedWater = getY() < 413;
+		
+		final boolean noInteractions = actors.isEmpty();
+		
+		if(ReachedWater && noInteractions) {
+			waterDeathAnimation();
 			return;
 		}
-		if (carDeath) {
-			carDeathAnimation();
+		
+		for(Actor actor : actors) {
+			HandleInteraction(actor);
 		}
-		if (waterDeath) {
+	}
+	
+	
+	public void HandleInteraction(Actor actor) {
+		final String actorName = actor.getActorClassName();
+		
+		final boolean carDeath = actorName.equalsIgnoreCase("Car");
+		
+		final boolean waterDeath = actorName.equalsIgnoreCase("WetTurtle") && ( (WetTurtle) actor ).isSunk();
+		
+		final boolean finalReached = actorName.equalsIgnoreCase("Final");
+		
+		if(carDeath) {
+			carDeathAnimation();
+			return;
+		}
+		else if(waterDeath){
 			waterDeathAnimation();
+			return;
+		}
+		else if(finalReached) {
+			HandleFinal( (Final) actor );
+			return;
+		}
+
+		if(actor instanceof Obstacle) {
+			RideObstacle( (Obstacle) actor );
+		}
+	}
+	
+	public void RideObstacle(Obstacle obstacle) {
+		
+		move( obstacle.getSpeed(), 0 );
+		
+	}
+	
+	public void HandleFinal(Final actorFinal) {
+		if(actorFinal.isActivated()) {
+			actorFinal.deactivate();
+			end--;
+			points -= 50;
+		}
+		else {
+			actorFinal.activate();
+			end++;
+			points += 50;
+			checkPoint = 800;
 		}
 		
-		if (getIntersectingObjects(Obstacle.class).size() >= 1) {
-			carDeath = true;
-		}
-		if (getX() == 240 && getY() == 82) {
-			stop = true;
-		}
-		if (getIntersectingObjects(Log.class).size() >= 1) {
-			if(getIntersectingObjects(Log.class).get(0).getLeft())
-				move(-2,0);
-			else
-				move (.75,0);
-		}
-		else if (getIntersectingObjects(Turtle.class).size() >= 1) {
-			move(-1,0);
-		}
-		else if (getIntersectingObjects(WetTurtle.class).size() >= 1) {
-			if (getIntersectingObjects(WetTurtle.class).get(0).isSunk()) {
-				waterDeath = true;
-			} else {
-				move(-1,0);
-			}
-		}
-		else if (getIntersectingObjects(End.class).size() >= 1) {
-			if (getIntersectingObjects(End.class).get(0).isActivated()) {
-				end--;
-				points-=50;
-			}
-			points+=50;
-			changeScore = true;
-			w=800;
-			getIntersectingObjects(End.class).get(0).setEnd();
-			end++;
-			RestoreDefaults();
-		}
-		else if (getY()<413){
-			waterDeath = true;
-			//moveToDefaultLocation
-		}
+		RestoreDefaults();
 	}
 	
 	public boolean getStop() {
@@ -107,13 +123,11 @@ public class Animal extends Actor {
 		
 		Busy = true;
 		
-		final int milliseconds = 300;
-
-		final Image carDeathFirstSlide = new Image("file:src/p4_group_8_repo/cardeath1.png", imgSize, imgSize, true, true);
+		final Image carDeathFirstSlide = new Image("file:src/p4_group_8_repo/cardeath1.png", size, size, true, true);
 		
-		final Image carDeathSecondSlide = new Image("file:src/p4_group_8_repo/cardeath2.png", imgSize, imgSize, true, true);
+		final Image carDeathSecondSlide = new Image("file:src/p4_group_8_repo/cardeath2.png", size, size, true, true);
 		
-		final Image carDeathThirdSlide = new Image("file:src/p4_group_8_repo/cardeath3.png", imgSize, imgSize, true, true);
+		final Image carDeathThirdSlide = new Image("file:src/p4_group_8_repo/cardeath3.png", size, size, true, true);
 		
 		List<Image> images = new ArrayList<> ();
 		
@@ -123,26 +137,23 @@ public class Animal extends Actor {
 		
 		images.add(carDeathThirdSlide);
 		
-		animate(images, milliseconds);
+		images.add(ActorImage);
 		
-		carDeath = false;
-		
-		substractPoints();
+		playDeathAnimation(images);
 		
 	}
 	
 	public void waterDeathAnimation() {
-		Busy = true;
 		
-		final int milliseconds = 300;
+		Busy = true;
 
-		final Image waterDeathFirstSlide = new Image("file:src/p4_group_8_repo/waterdeath1.png", imgSize,imgSize , true, true);
+		final Image waterDeathFirstSlide = new Image("file:src/p4_group_8_repo/waterdeath1.png", size,size , true, true);
 
-		final Image waterDeathSecondSlide = new Image("file:src/p4_group_8_repo/waterdeath2.png", imgSize,imgSize , true, true);
+		final Image waterDeathSecondSlide = new Image("file:src/p4_group_8_repo/waterdeath2.png", size,size , true, true);
 
-		final Image waterDeathThirdSlide = new Image("file:src/p4_group_8_repo/waterdeath3.png", imgSize,imgSize , true, true);
+		final Image waterDeathThirdSlide = new Image("file:src/p4_group_8_repo/waterdeath3.png", size,size , true, true);
 
-		final Image waterDeathFourthSlide = new Image("file:src/p4_group_8_repo/waterdeath4.png", imgSize,imgSize , true, true);
+		final Image waterDeathFourthSlide = new Image("file:src/p4_group_8_repo/waterdeath4.png", size,size , true, true);
 		
 		List<Image> images = new ArrayList<> ();
 		
@@ -154,9 +165,27 @@ public class Animal extends Actor {
 		
 		images.add(waterDeathFourthSlide);
 		
-		animate(images, milliseconds);
+		images.add(ActorImage);
 		
-		waterDeath = false;
+		playDeathAnimation(images);
+		
+	}
+	
+	public void playDeathAnimation(List<Image> images) {
+		
+		final int milliseconds = 300;
+		
+		Transition deathAnimation = animate(images, milliseconds);
+		
+		Transition pauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds * 3));
+		
+		deathAnimation.play();
+		
+		SequentialTransition animation = new SequentialTransition(pauseAfterAnimation);
+
+		animation.setOnFinished(event -> RestoreDefaults());
+		
+		animation.play();
 		
 		substractPoints();
 	}
@@ -170,58 +199,41 @@ public class Animal extends Actor {
 		
 	}
 	
+	@Override
 	public void HandleOutOfBoundsEvent() {
+		
 		if (getY()<0 || getY()>734) {
 			RestoreDefaults();
 		}
-		if (getX()<0) {
-			move(movement*2, 0);
+		
+		if (getX() < 0) {
+			move( movement * 2, 0 );
 		}
-		else if (getX()>600) {
-			move(-movement*2, 0);
+		
+		else if (getX() > 600) {
+			move( -movement * 2, 0 );
 		}
 	}
 	
 	public void RestoreDefaults(){
 		
-		final double defaultX = 300;
-		
-		final double defaultY = 679.8 + movement;
-		
 		Busy = false;
 		
 		setImage(ActorImage);
 		
-		setX(defaultX);
+		setX(startXPos);
 		
-		setY(defaultY);
+		setY(startYPos);
 
 		return;
 	}
 	
-	public void animate(List<Image> images, int milliseconds) {
-		Transition animation = new Transition() {
-			{
-		        setCycleDuration(Duration.millis(milliseconds)); // total time for animation
-		    }
-
-		    @Override
-		    protected void interpolate(double fraction) {
-		        final int animationSlideIndex = (int) (fraction * (images.size() - 1 ) );
-		        setImage(images.get(animationSlideIndex)); 
-		    }
-		};
-		animation.play();
-		
-		if(carDeath || waterDeath)
-			animation.setOnFinished(event -> RestoreDefaults());
-	}
-	
 	public void MoveUp(int milliseconds) {
+		final boolean passedCheckPoint = getY() < checkPoint;
 		
 		move(0, -movement);
 		
-		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerUpJump.png", imgSize, imgSize, true, true);
+		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerUpJump.png", size, size, true, true);
 
 		Image moveUpSecondSlide = ActorImage;
 		
@@ -231,13 +243,11 @@ public class Animal extends Actor {
 		
 		images.add(moveUpSecondSlide);
 		
-		animate(images, milliseconds);
+		MovementAnimationPlay(images, milliseconds, 0, -movement);
 		
-		move(0, -movement);
-		
-		if (getY() < w) {
+		if (passedCheckPoint) {
 			changeScore = true;
-			w = getY();
+			checkPoint = getY();
 			points+=10;
 		}
 		
@@ -247,9 +257,9 @@ public class Animal extends Actor {
 		
 		move(0, movement);
 		
-		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerDownJump.png", imgSize, imgSize, true, true);
+		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerDownJump.png", size, size, true, true);
 
-		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerDown.png", imgSize, imgSize, true, true);
+		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerDown.png", size, size, true, true);
 		
 		List<Image> images = new ArrayList<> ();
 		
@@ -257,9 +267,7 @@ public class Animal extends Actor {
 		
 		images.add(moveUpSecondSlide);
 		
-		animate(images, milliseconds);
-		
-		move(0, movement);
+		MovementAnimationPlay(images, milliseconds, 0, movement);
 		
 	}
 	
@@ -267,9 +275,9 @@ public class Animal extends Actor {
 	
 		move(-movementX, 0);
 		
-		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerLeftJump.png", imgSize, imgSize, true, true);
+		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerLeftJump.png", size, size, true, true);
 
-		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerLeft.png", imgSize, imgSize, true, true);
+		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerLeft.png", size, size, true, true);
 		
 		List<Image> images = new ArrayList<> ();
 		
@@ -277,9 +285,7 @@ public class Animal extends Actor {
 		
 		images.add(moveUpSecondSlide);
 		
-		animate(images, milliseconds);
-		
-		move(-movementX, 0);
+		MovementAnimationPlay(images, milliseconds, -movementX, 0);
 		
 	}
 	
@@ -287,9 +293,9 @@ public class Animal extends Actor {
 		
 		move(movementX, 0);
 		
-		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerRightJump.png", imgSize, imgSize, true, true);
+		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerRightJump.png", size, size, true, true);
 
-		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerRight.png", imgSize, imgSize, true, true);
+		Image moveUpSecondSlide = new Image("file:src/p4_group_8_repo/froggerRight.png", size, size, true, true);
 		
 		List<Image> images = new ArrayList<> ();
 		
@@ -297,10 +303,23 @@ public class Animal extends Actor {
 		
 		images.add(moveUpSecondSlide);
 		
-		animate(images, milliseconds);
+		MovementAnimationPlay(images, milliseconds, movementX, 0);
 		
-		move(movementX, 0);
+	}
+	
+	public void MovementAnimationPlay(List<Image> images, int milliseconds, double moveX, double moveY) {
 		
+		Transition MovementAnimation = animate(images, milliseconds);
+		
+		MovementAnimation.setOnFinished(event -> move(moveX, moveY));
+		
+		Transition PauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds));
+		
+		SequentialTransition animation = new SequentialTransition(MovementAnimation, PauseAfterAnimation);
+		
+		animation.setOnFinished(event -> { Busy = false; });
+		
+		animation.play();
 	}
 	
 	public EventHandler<KeyEvent> getKeyPressedHandler() {
@@ -343,5 +362,12 @@ public class Animal extends Actor {
 			points-=50;
 			changeScore = true;
 		}
+	}
+	
+	@Override
+	public String getActorClassName() {
+		
+		return "Animal";
+		
 	}
 }

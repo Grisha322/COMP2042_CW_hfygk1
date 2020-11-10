@@ -1,53 +1,80 @@
 package p4_group_8_repo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
-public class WetTurtle extends Actor{
-	Image turtle1;
-	Image turtle2;
-	Image turtle3;
-	Image turtle4;
-	private int speed;
-	int i = 1;
-	boolean bool = true;
-	boolean sunk = false;
+public class WetTurtle extends Turtle{
+	private boolean sunk;
+	
+	public WetTurtle(String imageLink, double size, double xpos, double ypos, double speed) {
+		
+		super(imageLink, size, xpos, ypos, speed);
+		
+	}
+	
 	@Override
-	public void act(long now) {
-
-				if (now/900000000  % 4 ==0) {
-					setImage(turtle2);
-					sunk = false;
-					
-				}
-				else if (now/900000000 % 4 == 1) {
-					setImage(turtle1);
-					sunk = false;
-				}
-				else if (now/900000000 %4 == 2) {
-					setImage(turtle3);
-					sunk = false;
-				} else if (now/900000000 %4 == 3) {
-					setImage(turtle4);
-					sunk = true;
-				}
-			
-		move(speed , 0);
-		if (getX() > 600 && speed>0)
-			setX(-200);
-		if (getX() < -75 && speed<0)
-			setX(600);
+	public void InitAnimation() {
+		
+		final int milliseconds = 1500;
+		
+		final Image TurtleSunkFirstSlide = new Image("file:src/p4_group_8_repo/TurtleAnimation2Wet.png", size, size, true, true);
+		
+		final Image TurtleSunkSecondSlide = new Image("file:src/p4_group_8_repo/TurtleAnimation3Wet.png", size, size, true, true);
+		
+		final Image TurtleSunkThirdSlide = new Image("file:src/p4_group_8_repo/TurtleAnimation4Wet.png", size, size, true, true);
+		
+		List<Image> images = new ArrayList<> ();
+		
+		images.add(TurtleSunkFirstSlide);
+		
+		images.add(TurtleSunkSecondSlide);
+		
+		images.add(TurtleSunkThirdSlide);
+		
+		PlayAnimation(images, milliseconds);
+		
 	}
-	public WetTurtle(int xpos, int ypos, int s, int w, int h) {
-		turtle1 = new Image("file:src/p4_group_8_repo/TurtleAnimation1.png", w, h, true, true);
-		turtle2 = new Image("file:src/p4_group_8_repo/TurtleAnimation2Wet.png", w, h, true, true);
-		turtle3 = new Image("file:src/p4_group_8_repo/TurtleAnimation3Wet.png", w, h, true, true);
-		turtle4 = new Image("file:src/p4_group_8_repo/TurtleAnimation4Wet.png", w, h, true, true);
-		setX(xpos);
-		setY(ypos);
-		speed = s;
-		setImage(turtle2);
+	
+	@Override
+	public void PlayAnimation(List<Image> imagesForSunkAnimation, int milliseconds) {
+		
+		List<Image> imagesForDefaultAnimation = new ArrayList<> ();
+		
+		imagesForDefaultAnimation.add(ActorImage);
+		
+		Transition defaultAnimation = animate(imagesForDefaultAnimation, milliseconds);
+		
+		defaultAnimation.setOnFinished(event -> {sunk = true;});
+		
+		Transition sunkAnimation = animate(imagesForSunkAnimation, milliseconds);
+		
+		sunkAnimation.setOnFinished(event -> {sunk = false;});
+		
+		Transition pauseBeforeAnimationCycle = new PauseTransition(Duration.millis(milliseconds));
+		
+		SequentialTransition animation = new SequentialTransition(defaultAnimation, sunkAnimation, pauseBeforeAnimationCycle);
+		
+		animation.setCycleCount(SequentialTransition.INDEFINITE);
+		
+		animation.play();
+		
 	}
+	
+	@Override
+	public String getActorClassName() {
+		
+		return "WetTurtle";
+		
+	}
+	
 	public boolean isSunk() {
 		return sunk;
 	}
+	
 }

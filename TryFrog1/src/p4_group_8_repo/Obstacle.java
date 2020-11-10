@@ -1,23 +1,44 @@
 package p4_group_8_repo;
 
-import javafx.scene.image.Image;
-
-public class Obstacle extends Actor {
-	private int speed;
+public class Obstacle extends MovingActor {
+	protected double speed;
 	@Override
 	public void act(long now) {
+		
 		move(speed , 0);
-		if (getX() > 600 && speed>0)
-			setX(-200);
-		if (getX() < -50 && speed<0)
-			setX(600);
+		
+		HandleOutOfBoundsEvent();
+		
 	}
 	
-	public Obstacle(String imageLink, int xpos, int ypos, int s, int w, int h) {
-		setImage(new Image(imageLink, w,h, true, true));
-		setX(xpos);
-		setY(ypos);
-		speed = s;
+	public Obstacle(String imageLink, double size, double xPos, double yPos, double speed) {
+		
+		super(imageLink, size, xPos, yPos);
+		
+		this.speed = speed;
+	}
+	
+	public double getSpeed() {
+		
+		return speed;
+		
+	}
+	
+	@Override
+	public void HandleOutOfBoundsEvent() {
+		
+		if (getX() > 600 + size && speed > 0)
+			setX(-size);
+		
+		if (getX() < - size && speed < 0)
+			setX(600 + size);
+		
+	}
+	
+	public String getActorClassName() {
+		
+		return "Obstacle";
+		
 	}
 
 }

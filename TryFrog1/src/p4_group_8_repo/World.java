@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -68,7 +69,6 @@ public abstract class World extends Pane {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                act(now);
                 List<Actor> actors = getObjects(Actor.class);
                 
                 for (Actor anActor: actors) {
@@ -88,11 +88,11 @@ public abstract class World extends Pane {
         timer.stop();
     }
     
-    public void add(Actor actor) {
+    public void add(ImageView actor) {
         getChildren().add(actor);
     }
 
-    public void remove(Actor actor) {
+    public void remove(ImageView actor) {
         getChildren().remove(actor);
     }
 
@@ -106,5 +106,4 @@ public abstract class World extends Pane {
         return someArray;
     }
 
-    public abstract void act(long now);
 }

@@ -18,4 +18,11 @@ public class Digit extends Actor{
 		setY(y);
 	}
 	
+	@Override
+	public String getActorClassName() {
+		
+		return "Digit";
+		
+	}
+	
 }
