@@ -14,26 +14,15 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 
 
-public class Animal extends MovingActor {
+public class Animal extends Player {
 	private int totalPoints = 0;
 	private int finalsReached = 0;
-	private boolean Busy = false;
-	private double startXPos;
-	private double startYPos;
-	private final double movement = 13.3333333*2;
-	private final double movementX = 10.666666*2;
 	private boolean changeScore = false;
 	private double checkPoint = 800;
 	
 	public Animal(String imageLink, double size, double startXPos, double startYPos) {
 		
-		super(imageLink, size, startXPos, startYPos);
-		
-		this.startXPos = startXPos;
-		
-		this.startYPos = startYPos;
-		
-		setOnKeyPressed( getKeyPressedHandler() );	
+		super(imageLink, size, startXPos, startYPos);	
 		
 	}
 	
@@ -46,6 +35,7 @@ public class Animal extends MovingActor {
 		HandleOutOfBoundsEvent();
 		
 		HandleInteractions();
+		
 	}
 	
 	public void HandleInteractions() {
@@ -197,32 +187,31 @@ public class Animal extends MovingActor {
 	}
 	
 	@Override
-	public void HandleOutOfBoundsEvent() {
+	public EventHandler<KeyEvent> getKeyPressedHandler() {
+		EventHandler<KeyEvent> KeyPressedHandler = new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent event){
+				if (!Busy) {
+					final int milliseconds = 100;
+					
+					Busy = true;
+					
+					if (event.getCode() == KeyCode.W) {	 
+		                MoveUp(milliseconds);
+		            }
+		            else if (event.getCode() == KeyCode.A) {
+		            	MoveLeft(milliseconds);
+		            }
+		            else if (event.getCode() == KeyCode.S) {	            	
+		            	MoveDown(milliseconds);
+		            }
+		            else if (event.getCode() == KeyCode.D) {
+		            	MoveRight(milliseconds);
+		            }
+				}
+			}
+		};
 		
-		if (getY()<0 || getY()>734) {
-			RestoreDefaults();
-		}
-		
-		if (getX() < 0) {
-			move( movement * 2, 0 );
-		}
-		
-		else if (getX() > 600) {
-			move( -movement * 2, 0 );
-		}
-	}
-	
-	public void RestoreDefaults(){
-		
-		Busy = false;
-		
-		setImage(ActorImage);
-		
-		setX(startXPos);
-		
-		setY(startYPos);
-
-		return;
+		return KeyPressedHandler;
 	}
 	
 	public void MoveUp(int milliseconds) {
@@ -320,44 +309,9 @@ public class Animal extends MovingActor {
 		
 		animation.play();
 	}
-	
-	public EventHandler<KeyEvent> getKeyPressedHandler() {
-		EventHandler<KeyEvent> KeyPressedHandler = new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event){
-				if (!Busy) {
-					
-					final int milliseconds = 100;
-					
-					Busy = true;
-					
-					if (event.getCode() == KeyCode.W) {	 
-						
-		                MoveUp(milliseconds);
-		                
-		            }
-		            else if (event.getCode() == KeyCode.A) {
-		            	
-		            	 MoveLeft(milliseconds);
-		            	 
-		            }
-		            else if (event.getCode() == KeyCode.S) {	            	
-		            	 
-		            	 MoveDown(milliseconds);
-		            }
-		            else if (event.getCode() == KeyCode.D) {
-		            	
-		            	 MoveRight(milliseconds);
-		            	 
-		            }
-				}
-			}
-		};
-		
-		return KeyPressedHandler;
-	}
 
 	public void substractPoints(int points){
-		totalPoints = totalPoints <= points ? 0 : (totalPoints - points);
+		totalPoints = (totalPoints <= points ? 0 : (totalPoints - points));
 		changeScore = true;
 	}
 	

@@ -2,12 +2,9 @@ package p4_group_8_repo;
 
 import javafx.scene.image.Image;
 
-public class Final extends Actor{
+public class Final extends StaticActor{
 	
 	private boolean activated = false;
-	
-	@Override
-	public void act() {}
 	
 	public Final(String imageLink, double size, double xPos, double yPos) {
 		

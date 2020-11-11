@@ -24,6 +24,10 @@ public class Obstacle extends MovingActor {
 		
 	}
 	
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
 	@Override
 	public void HandleOutOfBoundsEvent() {
 		
