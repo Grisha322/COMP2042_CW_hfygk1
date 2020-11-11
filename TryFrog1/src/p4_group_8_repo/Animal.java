@@ -15,15 +15,15 @@ import javafx.animation.Transition;
 
 
 public class Animal extends MovingActor {
-	int points = 0;
-	int end = 0;
-	boolean Busy = false;
+	private int totalPoints = 0;
+	private int finalsReached = 0;
+	private boolean Busy = false;
 	private double startXPos;
 	private double startYPos;
 	private final double movement = 13.3333333*2;
 	private final double movementX = 10.666666*2;
-	boolean changeScore = false;
-	double checkPoint = 800;
+	private boolean changeScore = false;
+	private double checkPoint = 800;
 	
 	public Animal(String imageLink, double size, double startXPos, double startYPos) {
 		
@@ -38,7 +38,11 @@ public class Animal extends MovingActor {
 	}
 	
 	@Override
-	public void act(long now) {
+	public void act() {
+		if(Busy) {
+			return;
+		}
+		
 		HandleOutOfBoundsEvent();
 		
 		HandleInteractions();
@@ -98,25 +102,24 @@ public class Animal extends MovingActor {
 	public void HandleFinal(Final actorFinal) {
 		if(actorFinal.isActivated()) {
 			actorFinal.deactivate();
-			end--;
-			points -= 50;
+			finalsReached--;
+			substractPoints(50);
 		}
 		else {
 			actorFinal.activate();
-			end++;
-			points += 50;
-			checkPoint = 800;
+			finalsReached++;
+			addPoints(50);
 		}
 		
 		RestoreDefaults();
 	}
 	
 	public boolean getStop() {
-		return end==5;
+		return finalsReached == 5;
 	}
 	
 	public int getPoints() {
-		return points;
+		return totalPoints;
 	}
 	
 	public void carDeathAnimation() {
@@ -136,8 +139,6 @@ public class Animal extends MovingActor {
 		images.add(carDeathSecondSlide);
 		
 		images.add(carDeathThirdSlide);
-		
-		images.add(ActorImage);
 		
 		playDeathAnimation(images);
 		
@@ -165,29 +166,25 @@ public class Animal extends MovingActor {
 		
 		images.add(waterDeathFourthSlide);
 		
-		images.add(ActorImage);
-		
 		playDeathAnimation(images);
 		
 	}
 	
 	public void playDeathAnimation(List<Image> images) {
 		
-		final int milliseconds = 300;
+		final int milliseconds = 1000;
 		
 		Transition deathAnimation = animate(images, milliseconds);
 		
-		Transition pauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds * 3));
+		Transition pauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds));
 		
-		deathAnimation.play();
-		
-		SequentialTransition animation = new SequentialTransition(pauseAfterAnimation);
+		SequentialTransition animation = new SequentialTransition(deathAnimation, pauseAfterAnimation);
 
 		animation.setOnFinished(event -> RestoreDefaults());
 		
 		animation.play();
 		
-		substractPoints();
+		substractPoints(50);
 	}
 	
 	public boolean changeScore() {
@@ -246,9 +243,11 @@ public class Animal extends MovingActor {
 		MovementAnimationPlay(images, milliseconds, 0, -movement);
 		
 		if (passedCheckPoint) {
-			changeScore = true;
+			
+			addPoints(10);
+			
 			checkPoint = getY();
-			points+=10;
+			
 		}
 		
 	}
@@ -357,11 +356,14 @@ public class Animal extends MovingActor {
 		return KeyPressedHandler;
 	}
 
-	public void substractPoints(){
-		if (points>50) {
-			points-=50;
-			changeScore = true;
-		}
+	public void substractPoints(int points){
+		totalPoints = totalPoints <= points ? 0 : (totalPoints - points);
+		changeScore = true;
+	}
+	
+	public void addPoints(int points) {
+		totalPoints += points;
+		changeScore = true;
 	}
 	
 	@Override

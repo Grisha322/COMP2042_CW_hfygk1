@@ -3,7 +3,6 @@ package p4_group_8_repo;
 import javafx.scene.image.ImageView;
 import javafx.animation.Transition;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public abstract class Actor extends ImageView{
 		return animation;
 	}
 	
-    public abstract void act(long now);
+    public abstract void act();
     
     public abstract String getActorClassName();
 }

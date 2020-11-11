@@ -72,7 +72,7 @@ public abstract class World extends Pane {
                 List<Actor> actors = getObjects(Actor.class);
                 
                 for (Actor anActor: actors) {
-                	anActor.act(now);
+                	anActor.act();
                 }
       
             }

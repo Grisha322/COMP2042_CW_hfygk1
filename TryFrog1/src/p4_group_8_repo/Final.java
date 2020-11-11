@@ -7,7 +7,7 @@ public class Final extends Actor{
 	private boolean activated = false;
 	
 	@Override
-	public void act(long now) {}
+	public void act() {}
 	
 	public Final(String imageLink, double size, double xPos, double yPos) {
 		

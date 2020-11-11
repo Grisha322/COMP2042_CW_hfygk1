@@ -3,7 +3,7 @@ package p4_group_8_repo;
 public class Obstacle extends MovingActor {
 	protected double speed;
 	@Override
-	public void act(long now) {
+	public void act() {
 		
 		move(speed , 0);
 		
