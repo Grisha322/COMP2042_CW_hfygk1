@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p4_group_8_repo.Controller">
+   <children>
+      <Pane prefHeight="50.0" prefWidth="600.0" styleClass="hood">
+         <children>
+            <Text fill="#fcfcfc" layoutX="14.0" layoutY="38.0" strokeWidth="0.0" styleClass="Text" text="Score" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane prefHeight="800.0" prefWidth="600.0" styleClass="gameSpace" />
+      <Pane layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="600.0" styleClass="hood">
+         <children>
+            <Text fill="#fcfcfc" layoutX="415.0" layoutY="37.0" strokeWidth="0.0" styleClass="Text" text="Time" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</VBox>

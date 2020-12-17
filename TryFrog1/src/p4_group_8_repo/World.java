@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -19,9 +20,8 @@ import javafx.scene.layout.StackPane;
 
 public abstract class World extends Pane {
     private AnimationTimer timer;
-    
+    private List<Actor> ActorSet;
     public World() {
-    	
     	sceneProperty().addListener(new ChangeListener<Scene>() {
 
 			@Override
@@ -33,8 +33,7 @@ public abstract class World extends Pane {
 						public void handle(KeyEvent event) {
 							if(getOnKeyReleased() != null) 
 								getOnKeyReleased().handle(event);
-							List<Actor> myActors = getObjects(Actor.class);
-							for (Actor anActor: myActors) {
+							for (Actor anActor: ActorSet) {
 								if (anActor.getOnKeyReleased() != null) {
 									anActor.getOnKeyReleased().handle(event);
 								}
@@ -49,8 +48,7 @@ public abstract class World extends Pane {
 						public void handle(KeyEvent event) {
 							if(getOnKeyPressed() != null) 
 								getOnKeyPressed().handle(event);
-							List<Actor> myActors = getObjects(Actor.class);
-							for (Actor anActor: myActors) {
+							for (Actor anActor: ActorSet) {
 								if (anActor.getOnKeyPressed() != null) {
 									anActor.getOnKeyPressed().handle(event);
 								}
@@ -64,14 +62,20 @@ public abstract class World extends Pane {
     		
 		});
     }
-
+    
+    public void setActorSet() {
+    	ActorSet = getActors(this);
+    }
+    
+    public List<Actor> getActorSet(){
+    	return ActorSet;
+    }
+    
     public void createTimer() {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                List<Actor> actors = getObjects(Actor.class);
-                
-                for (Actor anActor: actors) {
+                for (Actor anActor: ActorSet) {
                 	anActor.act();
                 }
       
@@ -96,11 +100,14 @@ public abstract class World extends Pane {
         getChildren().remove(actor);
     }
 
-    public <A extends Actor> List<A> getObjects(Class<A> cls) {
-        ArrayList<A> someArray = new ArrayList<A>();
-        for (Node n: getChildren()) {
-            if (cls.isInstance(n)) {
-                someArray.add((A)n);
+    public List<Actor> getActors(Pane pane) {
+        ArrayList<Actor> someArray = new ArrayList<Actor>();
+        for (Node node: pane.getChildren()) {
+        	if(node instanceof Pane) {
+        		someArray.addAll(getActors((Pane)node));
+        	}
+        	else if (node instanceof Actor) {
+                someArray.add((Actor)node);
             }
         }
         return someArray;

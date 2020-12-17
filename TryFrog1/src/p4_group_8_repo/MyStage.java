@@ -17,11 +17,11 @@ public class MyStage extends World{
 		Media sound = new Media(new File(musicFile).toURI().toString());
 		mediaPlayer = new MediaPlayer(sound);
 		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-	    mediaPlayer.play();
+	    //mediaPlayer.play();
 	}
 	
 	public void stopMusic() {
-		mediaPlayer.stop();
+		//mediaPlayer.stop();
 	}
 
 }

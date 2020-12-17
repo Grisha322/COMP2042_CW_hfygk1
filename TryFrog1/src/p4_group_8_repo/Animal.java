@@ -39,9 +39,9 @@ public class Animal extends Player {
 	}
 	
 	public void HandleInteractions() {
-		List<Actor> actors = getIntersectingObjects(Actor.class);
+		List<Actor> actors = getIntersectingObjects();
 		
-		final boolean ReachedWater = getY() < 413;
+		final boolean ReachedWater = false;//getY() < 413;
 		
 		final boolean noInteractions = actors.isEmpty();
 		
@@ -100,7 +100,7 @@ public class Animal extends Player {
 			finalsReached++;
 			addPoints(50);
 		}
-		
+		checkPoint = 800;
 		RestoreDefaults();
 	}
 	
@@ -162,7 +162,7 @@ public class Animal extends Player {
 	
 	public void playDeathAnimation(List<Image> images) {
 		
-		final int milliseconds = 1000;
+		final int milliseconds = 500;
 		
 		Transition deathAnimation = animate(images, milliseconds);
 		

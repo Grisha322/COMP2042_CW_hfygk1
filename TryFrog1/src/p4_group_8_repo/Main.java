@@ -5,6 +5,8 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -25,25 +27,32 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+	
+		Parent root = FXMLLoader.load(getClass().getResource("GameScreen.fxml"));
 		
-		BackgroundImage background = new BackgroundImage("file:src/p4_group_8_repo/Screen Shot 2017-05-29 at 10.02.14 PM.png");
+		primaryStage.setTitle("Frogger");
 		
 	    window = new MyStage();
 	    
-	    Scene scene  = new Scene(window,600,800);
+	    window.getChildren().add(root);
 	    
-	    window.add(background);
+	    Scene scene  = new Scene(window,400,700);
 		
-	    AddObstacles();
+	    //AddObstacles();
 	    
-	    AddPlayer();
+	    //AddPlayer();
 	    
-	    AddStaticActors();
+	    //AddStaticActors();
+	    
+	    window.setActorSet();
 	    
 		window.start();
+		
 		primaryStage.setScene(scene);
+		
 		primaryStage.show();
-		start();  
+		
+		//start(); 
 	}
 	public void createTimer() {
         timer = new AnimationTimer() {

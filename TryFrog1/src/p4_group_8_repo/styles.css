@@ -1,0 +1,13 @@
+.gameSpace{
+	-fx-background-image: url("background.png");
+	-fx-background-repeat: no-repeat;
+	-fx-background-size: 400px 600px;
+}
+
+.hood{
+	-fx-background-color: black;
+}
+
+.Text{
+	-fx-font-size: 32px;
+}

@@ -5,8 +5,8 @@ import javafx.scene.input.KeyEvent;
 
 public abstract class Player extends MovingActor {
 	
-	protected final double movement = 13.3333333*2;
-	protected final double movementX = 10.666666*2;
+	protected final double movement = 33;
+	protected final double movementX = 22;
 	protected boolean Busy = false;
 	private double startXPos;
 	private double startYPos;
@@ -23,7 +23,7 @@ public abstract class Player extends MovingActor {
 
 	@Override
 	public void HandleOutOfBoundsEvent() {
-		if (getY()<0 || getY()>734) {
+		if (getY() >= 60-size) {
 			RestoreDefaults();
 		}
 		
@@ -31,7 +31,7 @@ public abstract class Player extends MovingActor {
 			move( movement * 2, 0 );
 		}
 		
-		else if (getX() > 600) {
+		else if (getX() >= 400 - size) {
 			move( -movement * 2, 0 );
 		}
 	}
