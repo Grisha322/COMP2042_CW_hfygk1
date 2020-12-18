@@ -1,7 +1,7 @@
 .gameSpace{
 	-fx-background-image: url("background.png");
 	-fx-background-repeat: no-repeat;
-	-fx-background-size: 400px 600px;
+	-fx-background-size: 600px 800px;
 }
 
 .hood{

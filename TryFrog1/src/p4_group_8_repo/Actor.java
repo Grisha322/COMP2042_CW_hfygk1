@@ -36,18 +36,13 @@ public abstract class Actor extends ImageView{
         return (World) node;
     }
 
-    public double getWidth() {
-        return this.getBoundsInLocal().getWidth();
-    }
-
-    public double getHeight() {
-        return this.getBoundsInLocal().getHeight();
-    }
-
     public List<Actor> getIntersectingObjects(){
         ArrayList<Actor> someArray = new ArrayList<Actor>();
         for (Actor actor: getWorld().getActorSet()) {
-            if (actor != this && actor.intersects(this.getBoundsInLocal())) {
+        	
+        	final boolean intersects = this.localToScene(this.getBoundsInLocal()).intersects(actor.localToScene(actor.getBoundsInLocal()));
+        	
+            if (actor != this && intersects) {
                 someArray.add(actor);
             }
         }

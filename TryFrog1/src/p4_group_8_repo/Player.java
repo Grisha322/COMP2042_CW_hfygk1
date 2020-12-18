@@ -5,34 +5,36 @@ import javafx.scene.input.KeyEvent;
 
 public abstract class Player extends MovingActor {
 	
-	protected final double movement = 33;
-	protected final double movementX = 22;
+	protected final double movement = 32;
 	protected boolean Busy = false;
 	private double startXPos;
 	private double startYPos;
 	
 	public Player(String ImageLink, double size, double xPos, double yPos) {
-		super(ImageLink, size, xPos, yPos);
+		super(ImageLink, size);
 		
 		this.startXPos = xPos;
 		
 		this.startYPos = yPos;
+		
+		RestoreDefaults();
 		
 		setOnKeyPressed( getKeyPressedHandler() );
 	}
 
 	@Override
 	public void HandleOutOfBoundsEvent() {
-		if (getY() >= 60-size) {
+		System.out.println(getY());
+		if (getY() > 64) {
 			RestoreDefaults();
 		}
 		
 		if (getX() < 0) {
-			move( movement * 2, 0 );
+			moveX( movement * 2);
 		}
 		
-		else if (getX() >= 400 - size) {
-			move( -movement * 2, 0 );
+		else if (getX() >= 600 - size) {
+			moveX( -movement * 2);
 		}
 	}
 

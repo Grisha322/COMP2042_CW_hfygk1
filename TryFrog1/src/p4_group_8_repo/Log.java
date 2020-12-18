@@ -1,10 +1,10 @@
 package p4_group_8_repo;
 
-public class Log extends Obstacle {
+public class Log extends MovingObstacle {
 
-	public Log(String imageLink, double size, double xpos, double ypos, double speed) {
+	public Log(String imageLink, double size, double speed) {
 		
-		super(imageLink, size, xpos, ypos, speed);
+		super(imageLink, size, speed);
 		
 	}
 	

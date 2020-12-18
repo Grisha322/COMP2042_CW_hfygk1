@@ -6,9 +6,9 @@ public class Final extends StaticActor{
 	
 	private boolean activated = false;
 	
-	public Final(String imageLink, double size, double xPos, double yPos) {
+	public Final(String imageLink, double size) {
 		
-		super(imageLink, size, xPos, yPos);
+		super(imageLink, size);
 		
 	}
 	

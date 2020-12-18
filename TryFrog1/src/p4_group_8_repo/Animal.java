@@ -14,11 +14,13 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 
 
+
 public class Animal extends Player {
 	private int totalPoints = 0;
 	private int finalsReached = 0;
-	private boolean changeScore = false;
+	private boolean scoreChanged = false;
 	private double checkPoint = 800;
+	private final double waterPoint = -320;
 	
 	public Animal(String imageLink, double size, double startXPos, double startYPos) {
 		
@@ -41,7 +43,7 @@ public class Animal extends Player {
 	public void HandleInteractions() {
 		List<Actor> actors = getIntersectingObjects();
 		
-		final boolean ReachedWater = false;//getY() < 413;
+		final boolean ReachedWater = getY() < waterPoint;
 		
 		final boolean noInteractions = actors.isEmpty();
 		
@@ -78,15 +80,13 @@ public class Animal extends Player {
 			return;
 		}
 
-		if(actor instanceof Obstacle) {
-			RideObstacle( (Obstacle) actor );
+		if(actor instanceof MovingObstacle) {
+			RideObstacle( (MovingObstacle) actor );
 		}
 	}
 	
-	public void RideObstacle(Obstacle obstacle) {
-		
-		move( obstacle.getSpeed(), 0 );
-		
+	public void RideObstacle(MovingObstacle obstacle) {
+		moveX(obstacle.getSpeed());
 	}
 	
 	public void HandleFinal(Final actorFinal) {
@@ -177,9 +177,9 @@ public class Animal extends Player {
 		substractPoints(50);
 	}
 	
-	public boolean changeScore() {
-		if (changeScore) {
-			changeScore = false;
+	public boolean scoreChanged() {
+		if (scoreChanged) {
+			scoreChanged = false;
 			return true;
 		}
 		return false;
@@ -217,7 +217,7 @@ public class Animal extends Player {
 	public void MoveUp(int milliseconds) {
 		final boolean passedCheckPoint = getY() < checkPoint;
 		
-		move(0, -movement);
+		moveY(-movement);
 		
 		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerUpJump.png", size, size, true, true);
 
@@ -243,7 +243,7 @@ public class Animal extends Player {
 	
 	public void MoveDown(int milliseconds) {
 		
-		move(0, movement);
+		moveY(movement);
 		
 		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerDownJump.png", size, size, true, true);
 
@@ -261,7 +261,7 @@ public class Animal extends Player {
 	
 	public void MoveLeft(int milliseconds) {
 	
-		move(-movementX, 0);
+		moveX(-movement);
 		
 		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerLeftJump.png", size, size, true, true);
 
@@ -273,13 +273,13 @@ public class Animal extends Player {
 		
 		images.add(moveUpSecondSlide);
 		
-		MovementAnimationPlay(images, milliseconds, -movementX, 0);
+		MovementAnimationPlay(images, milliseconds, -movement, 0);
 		
 	}
 	
 	public void MoveRight(int milliseconds) {
 		
-		move(movementX, 0);
+		moveX(movement);
 		
 		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerRightJump.png", size, size, true, true);
 
@@ -291,7 +291,7 @@ public class Animal extends Player {
 		
 		images.add(moveUpSecondSlide);
 		
-		MovementAnimationPlay(images, milliseconds, movementX, 0);
+		MovementAnimationPlay(images, milliseconds, movement, 0);
 		
 	}
 	
@@ -312,12 +312,12 @@ public class Animal extends Player {
 
 	public void substractPoints(int points){
 		totalPoints = (totalPoints <= points ? 0 : (totalPoints - points));
-		changeScore = true;
+		scoreChanged = true;
 	}
 	
 	public void addPoints(int points) {
 		totalPoints += points;
-		changeScore = true;
+		scoreChanged = true;
 	}
 	
 	@Override

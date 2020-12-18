@@ -10,11 +10,11 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-public class Turtle extends Obstacle{
+public class Turtle extends MovingObstacle{
 	
-	public Turtle(String imageLink, double size, double xpos, double ypos, double speed) {
+	public Turtle(String imageLink, double size, double speed) {
 		
-		super(imageLink, size, xpos, ypos, speed);
+		super(imageLink, size, speed);
 		
 		InitAnimation();
 		
@@ -22,7 +22,7 @@ public class Turtle extends Obstacle{
 	
 	public void InitAnimation() {
 		
-		final int milliseconds = 1000;
+		final int milliseconds = 3000;
 		
 		final Image TurtleFirstSlide = new Image("file:src/p4_group_8_repo/TurtleAnimation1.png", size, size, true, true);
 		

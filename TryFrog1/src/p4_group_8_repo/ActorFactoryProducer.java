@@ -16,16 +16,13 @@ public class ActorFactoryProducer {
 		
 		final boolean isStaticFactory = factoryType.equalsIgnoreCase("StaticFactory");
 		
-		final boolean isObstacleFactory = factoryType.equalsIgnoreCase("ObstacleFactory");
+		final boolean isObstacleFactory = factoryType.equalsIgnoreCase("MovingObstacleFactory");
 		
-		if(isPlayerFactory) {
-			actorFactory = new PlayerFactory();
-		}
-		else if(isStaticFactory) {
+		if(isStaticFactory) {
 			actorFactory = new StaticFactory();
 		}
 		else if(isObstacleFactory) {
-			actorFactory = new ObstacleFactory();
+			actorFactory = new MovingObstalceFactory();
 		}
 		
 		return actorFactory;

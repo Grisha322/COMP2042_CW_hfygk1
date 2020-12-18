@@ -4,9 +4,9 @@ import javafx.scene.image.Image;
 
 public class Digit extends StaticActor{
 	
-	public Digit(String imgLink, double size, double xPos, double yPos) {
+	public Digit(String imgLink, double size) {
 		
-		super(imgLink, size, xPos, yPos);
+		super(imgLink, size);
 		
 	}
 	

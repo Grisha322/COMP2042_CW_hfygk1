@@ -1,10 +1,10 @@
 package p4_group_8_repo;
 
-public class Car extends Obstacle{
+public class Car extends MovingObstacle{
 	
-	public Car(String imageLink, double size, double xPos, double yPos, double speed) {
+	public Car(String imageLink, double size, double speed) {
 		
-		super(imageLink, size, xPos, yPos, speed);
+		super(imageLink, size, speed);
 		
 	}
 	

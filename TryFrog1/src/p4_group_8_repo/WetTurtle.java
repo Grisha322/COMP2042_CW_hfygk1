@@ -12,16 +12,16 @@ import javafx.util.Duration;
 public class WetTurtle extends Turtle{
 	private boolean sunk;
 	
-	public WetTurtle(String imageLink, double size, double xpos, double ypos, double speed) {
+	public WetTurtle(String imageLink, double size, double speed) {
 		
-		super(imageLink, size, xpos, ypos, speed);
+		super(imageLink, size, speed);
 		
 	}
 	
 	@Override
 	public void InitAnimation() {
 		
-		final int milliseconds = 1500;
+		final int milliseconds = 2000;
 		
 		final Image TurtleSunkFirstSlide = new Image("file:src/p4_group_8_repo/TurtleAnimation2Wet.png", size, size, true, true);
 		

@@ -3,27 +3,33 @@ package p4_group_8_repo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class ActorGroupAdder {
-	private double size = 0;
-	private double speed = 0;
-	private double startXPos;
-	private double yPos = 0;
-	private double shift = 0;
-	private int amount = 0;
+	private double size;
+	private double speed;
+	private int amount;
 	private String imageLink = "";
 	private String ActorType =  "";
 	private String ActorGroup;
+	private double distanceBetweenActors = 0;
 	
-	public ActorGroupAdder(String ActorGroup) {
+	public ActorGroupAdder() {}
+	
+	public ActorGroupAdder(String ActorGroup, String ActorType, String imageLink) {
+		initiActorGroupAdder(ActorGroup, ActorType, imageLink);
+	}
+	
+	public void initiActorGroupAdder(String ActorGroup, String ActorType, String imageLink) {
+		setActorGroup(ActorGroup);
+		setImageLink(imageLink);
+		setActorType(ActorType);
+		distanceBetweenActors = 0;
+	}
+	
+	public void setActorGroup(String ActorGroup) {
 		this.ActorGroup = ActorGroup;
-	}
-	
-	public void setStartXPos(double startXPos) {
-		this.startXPos = startXPos;
-	}
-	
-	public void setYPos(double yPos) {
-		this.yPos = yPos;
 	}
 	
 	public void setAmount(int amount) {
@@ -38,10 +44,6 @@ public class ActorGroupAdder {
 		this.size = size;
 	}
 	
-	public void setShift(double shift) {
-		this.shift = shift;
-	}
-	
 	public void setImageLink(String imageLink) {
 		this.imageLink = imageLink;
 	}
@@ -50,26 +52,32 @@ public class ActorGroupAdder {
 		this.ActorType = ActorType;
 	}
 	
-	public List<Actor> AddToWindow(MyStage window) {
+	public void setDistanceBetweenActors(double distanceBetweenActors) {
+		this.distanceBetweenActors = distanceBetweenActors;
+	}
+	
+	public List<Actor> AddToLine(Pane line) {
 		List<Actor> actorsAdded = new ArrayList<>();
 		
 		ActorFactoryProducer factoryProducer = ActorFactoryProducer.getActorFactoryProducer();
 		
 		ActorFactory factory = factoryProducer.getActorFactory(ActorGroup);
 		
-		if(factory instanceof ObstacleFactory) {
-			((ObstacleFactory) factory).setSpeed(speed);
+		if(factory instanceof MovingObstalceFactory) {
+			((MovingObstalceFactory) factory).setSpeed(speed);
 		}
 		
 		for(int iterator = 0; iterator < amount; iterator++) {
-			
-			final double actualXPos = startXPos + shift * iterator;
     		
-    		Actor actor = factory.getActor(ActorType, imageLink, size,  actualXPos, yPos);
+    		Actor actor = factory.getActor(ActorType, imageLink, size);
     		
     		actorsAdded.add(actor);
     		
-    		window.add(actor);
+    		line.getChildren().add((ImageView) actor);
+    		
+    		if(distanceBetweenActors != 0) {
+    			actor.setX((size + distanceBetweenActors) * iterator);
+    		}
     		
 		}
 		

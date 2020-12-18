@@ -1,19 +1,19 @@
 package p4_group_8_repo;
 
-public class Obstacle extends MovingActor {
+public class MovingObstacle extends MovingActor {
 	protected double speed;
 	@Override
 	public void act() {
 		
-		move(speed , 0);
+		moveX(speed);
 		
 		HandleOutOfBoundsEvent();
 		
 	}
 	
-	public Obstacle(String imageLink, double size, double xPos, double yPos, double speed) {
+	public MovingObstacle(String imageLink, double size, double speed) {
 		
-		super(imageLink, size, xPos, yPos);
+		super(imageLink, size);
 		
 		this.speed = speed;
 	}
