@@ -1,8 +1,6 @@
 package p4_group_8_repo;
 import java.util.HashMap;
 
-import com.sun.scenario.Settings;
-
 public abstract class LevelSettings {
 	protected HashMap<LevelKeys, Double> settings = new HashMap<LevelKeys, Double>();
 	

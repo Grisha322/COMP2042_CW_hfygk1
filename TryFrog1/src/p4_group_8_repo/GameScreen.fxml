@@ -16,13 +16,13 @@
                   <Font size="14.0" />
                </font>
             </Text>
-            <HBox fx:id="scoreContainer" layoutX="105.0" layoutY="5.0" prefHeight="40.0" prefWidth="160.0" spacing="4.0" />
+            <HBox fx:id="scoreContainer" alignment="CENTER_LEFT" layoutX="130.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0" spacing="4.0" />
             <Text fill="#fcfcfc" layoutX="435.0" layoutY="37.0" strokeWidth="0.0" styleClass="Text" text="Level" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <HBox fx:id="levelCounter" layoutX="529.0" layoutY="5.0" prefHeight="40.0" prefWidth="40.0" spacing="4.0" />
+            <HBox fx:id="levelContainer" layoutX="517.0" layoutY="11.0" prefHeight="40.0" prefWidth="40.0" spacing="4.0" />
          </children>
       </Pane>
       <Pane fx:id="gameSpace" prefHeight="800.0" prefWidth="600.0" styleClass="gameSpace">
@@ -41,13 +41,18 @@
          </children></Pane>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="400.0" styleClass="hood">
          <children>
-            <Text fill="#fcfcfc" layoutX="416.0" layoutY="38.0" strokeWidth="0.0" styleClass="Text" text="Time" textAlignment="CENTER">
+            <Text fill="#fcfcfc" layoutX="393.0" layoutY="38.0" strokeWidth="0.0" styleClass="Text" text="Time" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
             <HBox fx:id="lifesContainer" alignment="CENTER_LEFT" layoutY="4.0" prefHeight="40.0" prefWidth="150.0" spacing="9.0" />
-            <HBox fx:id="timeContainer" layoutX="506.0" layoutY="4.0" prefHeight="40.0" prefWidth="80.0" spacing="4.0" />
+            <HBox fx:id="timeContainer" layoutX="483.0" layoutY="11.0" prefHeight="40.0" prefWidth="80.0" spacing="4.0" />
+            <Text fill="#fcfcfc" layoutX="512.0" layoutY="36.0" strokeWidth="0.0" styleClass="Text" text=":" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

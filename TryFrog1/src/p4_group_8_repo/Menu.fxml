@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+
+<StackPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p4_group_8_repo.menuController">
+   <children>
+      <Pane fx:id="infoPage" prefHeight="900.0" prefWidth="600.0" styleClass="infoPage">
+         <children>
+            <Button layoutX="453.0" layoutY="636.0" mnemonicParsing="false" onAction="#openMenu" prefHeight="45.0" prefWidth="107.0" text="Back">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Text fill="#fffefe" layoutX="39.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are three levels in the game and foreach level the user has 3 lifes and a 5 minute timer to reach finish 5 times. Passing every lineof obstacles will grant 10 points, reaching finish will grant 50 points. However make sure to reachan empty finishing box, since if the finishing boxis full upon reaching, the user will lose 50 pointsand deactivate the box. For each life saved afterfinishing level, the user gets 250 points, and also1 point for each second of the timer left." wrappingWidth="521.2734375">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <VBox fx:id="menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="600.0" stylesheets="@styles.css">
+         <children>
+            <Pane prefHeight="900.0" prefWidth="600.0" styleClass="Menu">
+               <children>
+                  <Text fill="WHITE" layoutX="212.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Frogger">
+                     <font>
+                        <Font name="System Italic" size="51.0" />
+                     </font>
+                  </Text>
+                  <Button defaultButton="true" layoutX="222.0" layoutY="257.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="157.0" text="Play">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Button>
+                  <ToggleButton alignment="TOP_CENTER" layoutX="218.0" layoutY="618.0" mnemonicParsing="false" onAction="#toggleMusic" prefHeight="74.0" prefWidth="157.0" text="Music">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </ToggleButton>
+                  <Text fx:id="musicText" layoutX="272.0" layoutY="681.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ON" wrappingWidth="56.0234375">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <Button layoutX="218.0" layoutY="495.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="157.0" text="High Score">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="218.0" layoutY="376.0" mnemonicParsing="false" onAction="#openInfo" prefHeight="74.0" prefWidth="157.0" text="Info">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

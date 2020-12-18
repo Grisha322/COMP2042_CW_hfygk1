@@ -12,8 +12,6 @@ public class ActorFactoryProducer {
 	public ActorFactory getActorFactory(String factoryType) {
 		ActorFactory actorFactory = null;
 		
-		final boolean isPlayerFactory = factoryType.equalsIgnoreCase("PlayerFactory");
-		
 		final boolean isStaticFactory = factoryType.equalsIgnoreCase("StaticFactory");
 		
 		final boolean isObstacleFactory = factoryType.equalsIgnoreCase("MovingObstacleFactory");

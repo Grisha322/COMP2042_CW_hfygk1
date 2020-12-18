@@ -15,16 +15,11 @@ import javafx.animation.Transition;
 
 
 
-public class Animal extends Player {
-	private int totalPoints = 0;
-	private int finalsReached = 0;
-	private boolean scoreChanged = false;
-	private double checkPoint = 800;
-	private final double waterPoint = -320;
+public class Frogger extends Player {
 	
-	public Animal(String imageLink, double size, double startXPos, double startYPos) {
+	public Frogger(String imageLink, double size, double startXPos, double startYPos, List<Actor> lifes) {
 		
-		super(imageLink, size, startXPos, startYPos);	
+		super(imageLink, size, startXPos, startYPos, lifes);	
 		
 	}
 	
@@ -48,7 +43,7 @@ public class Animal extends Player {
 		final boolean noInteractions = actors.isEmpty();
 		
 		if(ReachedWater && noInteractions) {
-			waterDeathAnimation();
+			handleDeath("Waterdeath");
 			return;
 		}
 		
@@ -68,11 +63,11 @@ public class Animal extends Player {
 		final boolean finalReached = actorName.equalsIgnoreCase("Final");
 		
 		if(carDeath) {
-			carDeathAnimation();
+			handleDeath("Waterdeath");
 			return;
 		}
 		else if(waterDeath){
-			waterDeathAnimation();
+			handleDeath("Cardeath");
 			return;
 		}
 		else if(finalReached) {
@@ -89,30 +84,7 @@ public class Animal extends Player {
 		moveX(obstacle.getSpeed());
 	}
 	
-	public void HandleFinal(Final actorFinal) {
-		if(actorFinal.isActivated()) {
-			actorFinal.deactivate();
-			finalsReached--;
-			substractPoints(50);
-		}
-		else {
-			actorFinal.activate();
-			finalsReached++;
-			addPoints(50);
-		}
-		checkPoint = 800;
-		RestoreDefaults();
-	}
-	
-	public boolean getStop() {
-		return finalsReached == 5;
-	}
-	
-	public int getPoints() {
-		return totalPoints;
-	}
-	
-	public void carDeathAnimation() {
+	public List<Image> getCarDeathSlides() {
 		
 		Busy = true;
 		
@@ -130,11 +102,11 @@ public class Animal extends Player {
 		
 		images.add(carDeathThirdSlide);
 		
-		playDeathAnimation(images);
+		return images;
 		
 	}
 	
-	public void waterDeathAnimation() {
+	public List<Image> getWaterDeathSlides() {
 		
 		Busy = true;
 
@@ -156,33 +128,7 @@ public class Animal extends Player {
 		
 		images.add(waterDeathFourthSlide);
 		
-		playDeathAnimation(images);
-		
-	}
-	
-	public void playDeathAnimation(List<Image> images) {
-		
-		final int milliseconds = 500;
-		
-		Transition deathAnimation = animate(images, milliseconds);
-		
-		Transition pauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds));
-		
-		SequentialTransition animation = new SequentialTransition(deathAnimation, pauseAfterAnimation);
-
-		animation.setOnFinished(event -> RestoreDefaults());
-		
-		animation.play();
-		
-		substractPoints(50);
-	}
-	
-	public boolean scoreChanged() {
-		if (scoreChanged) {
-			scoreChanged = false;
-			return true;
-		}
-		return false;
+		return images;
 		
 	}
 	
@@ -215,9 +161,10 @@ public class Animal extends Player {
 	}
 	
 	public void MoveUp(int milliseconds) {
-		final boolean passedCheckPoint = getY() < checkPoint;
 		
 		moveY(-movement);
+		
+		final boolean passedCheckPoint = getY() < currentCheckpoint;
 		
 		Image moveUpFirstSlide = new Image("file:src/p4_group_8_repo/froggerUpJump.png", size, size, true, true);
 
@@ -235,7 +182,7 @@ public class Animal extends Player {
 			
 			addPoints(10);
 			
-			checkPoint = getY();
+			currentCheckpoint = getY();
 			
 		}
 		
@@ -310,20 +257,24 @@ public class Animal extends Player {
 		animation.play();
 	}
 
-	public void substractPoints(int points){
-		totalPoints = (totalPoints <= points ? 0 : (totalPoints - points));
-		scoreChanged = true;
-	}
-	
-	public void addPoints(int points) {
-		totalPoints += points;
-		scoreChanged = true;
-	}
-	
 	@Override
 	public String getActorClassName() {
 		
 		return "Animal";
 		
+	}
+
+	@Override
+	public List<Image> getDeathSlides(String deathType) {
+		final boolean waterDeath = deathType.equalsIgnoreCase("Waterdeath");
+		final boolean carDeath = deathType.equalsIgnoreCase("Cardeath");
+		List<Image> slides = null;
+		if(waterDeath) {
+			slides = getWaterDeathSlides();
+		}
+		else if(carDeath) {
+			slides = getCarDeathSlides();
+		}
+		return slides;
 	}
 }

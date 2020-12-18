@@ -3,7 +3,18 @@
 	-fx-background-repeat: no-repeat;
 	-fx-background-size: 600px 800px;
 }
-
+.Menu{
+	-fx-background-image: url("MenuScreen.jpg");
+	-fx-background-repeat: no-repeat;
+	-fx-background-size: 600px 900px;
+}
+.infoPage{
+	-fx-background-color: black;
+}
+.infoText{
+	-fx-color: white;
+	-fx-background-color: black;
+}
 .hood{
 	-fx-background-color: black;
 }

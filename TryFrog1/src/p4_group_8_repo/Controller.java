@@ -1,9 +1,9 @@
 package p4_group_8_repo;
 
+import java.util.List;
+
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -46,17 +46,30 @@ public class Controller{
 	@FXML
     public void initialize() {
 		
-		Actor frogger = new Animal("file:src/p4_group_8_repo/froggerUp.png", 32, 284, 64);
-		startPane.getChildren().add((ImageView) frogger);
 		LevelSettings levelSettings = LevelOneSettings.getInstance();
 		ActorGroupAdder GroupAdder = new ActorGroupAdder();
-	
+		Game game = Game.getInstance();
+		
 		addCars(GroupAdder, levelSettings);
 		addTracks(GroupAdder, levelSettings);
 		addTurtles(GroupAdder, levelSettings);
 		addLogs(GroupAdder, levelSettings);
-		addFinals(GroupAdder);
-		addLifes(GroupAdder);
+		
+		final List<Actor> lifes = addLifes(GroupAdder);
+		final List<Actor> finals = addFinals(GroupAdder);
+		final List<Actor> scoreDisplay = addDigits(GroupAdder, 5, scoreContainer);
+		final List<Actor> timeDisplay = addDigits(GroupAdder, 3, timeContainer);
+		final List<Actor> levelDisplay = addDigits(GroupAdder, 1, levelContainer);
+		
+		Actor frogger = new Frogger("file:src/p4_group_8_repo/froggerUp.png", 32, 284, 64, lifes);
+		startPane.getChildren().add((ImageView) frogger);
+		
+		game.setPlayer(frogger);
+		game.setFinals(finals);
+		game.setScoreDisplay(scoreDisplay);
+		game.setTimeLeftDisplay(timeDisplay);
+		game.setLevelDisplay(levelDisplay);
+		//game.start();
     }
 	
 	private void addCars(ActorGroupAdder GroupAdder, LevelSettings settings) {
@@ -124,18 +137,25 @@ public class Controller{
 		GroupAdder.AddToLine(waterPane4);
 	}
 	
-	private void addFinals(ActorGroupAdder GroupAdder) {
+	private List<Actor> addFinals(ActorGroupAdder GroupAdder) {
 		GroupAdder.initiActorGroupAdder("StaticFactory", "Final", "file:src/p4_group_8_repo/End.png");
 		GroupAdder.setSize(64);
 		GroupAdder.setAmount(5);
 		GroupAdder.setDistanceBetweenActors(68);
-		GroupAdder.AddToLine(end);
+		return GroupAdder.AddToLine(end);
 	}
 	
-	private void addLifes(ActorGroupAdder GroupAdder) {
+	private List<Actor> addLifes(ActorGroupAdder GroupAdder) {
 		GroupAdder.initiActorGroupAdder("StaticFactory", "Life", "file:src/p4_group_8_repo/Heart.png");
 		GroupAdder.setSize(32);
 		GroupAdder.setAmount(3);
-		GroupAdder.AddToLine(lifesContainer);
+		return GroupAdder.AddToLine(lifesContainer);
+	}
+	
+	private List<Actor> addDigits(ActorGroupAdder GroupAdder, int amount, Pane pane){
+		GroupAdder.initiActorGroupAdder("StaticFactory", "Digit", "file:src/p4_group_8_repo/0.png");
+		GroupAdder.setSize(32);
+		GroupAdder.setAmount(amount);
+		return GroupAdder.AddToLine(pane);
 	}
 }
