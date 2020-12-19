@@ -11,7 +11,7 @@
 .infoPage{
 	-fx-background-color: black;
 }
-.infoText{
+.infoText, .text{
 	-fx-color: white;
 	-fx-background-color: black;
 }
@@ -21,4 +21,7 @@
 
 .Text{
 	-fx-font-size: 32px;
+}
+.nextLevel{
+	-fx-background-color: white;
 }

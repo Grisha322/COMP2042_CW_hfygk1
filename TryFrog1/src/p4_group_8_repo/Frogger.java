@@ -25,9 +25,6 @@ public class Frogger extends Player {
 	
 	@Override
 	public void act() {
-		if(Busy) {
-			return;
-		}
 		
 		HandleOutOfBoundsEvent();
 		
@@ -52,6 +49,9 @@ public class Frogger extends Player {
 		}
 	}
 	
+	public void stopAnimation() {}
+	
+	public void continueAnimation() {}
 	
 	public void HandleInteraction(Actor actor) {
 		final String actorName = actor.getActorClassName();
@@ -85,9 +85,6 @@ public class Frogger extends Player {
 	}
 	
 	public List<Image> getCarDeathSlides() {
-		
-		Busy = true;
-		
 		final Image carDeathFirstSlide = new Image("file:src/p4_group_8_repo/cardeath1.png", size, size, true, true);
 		
 		final Image carDeathSecondSlide = new Image("file:src/p4_group_8_repo/cardeath2.png", size, size, true, true);
@@ -108,8 +105,6 @@ public class Frogger extends Player {
 	
 	public List<Image> getWaterDeathSlides() {
 		
-		Busy = true;
-
 		final Image waterDeathFirstSlide = new Image("file:src/p4_group_8_repo/waterdeath1.png", size,size , true, true);
 
 		final Image waterDeathSecondSlide = new Image("file:src/p4_group_8_repo/waterdeath2.png", size,size , true, true);
@@ -136,24 +131,20 @@ public class Frogger extends Player {
 	public EventHandler<KeyEvent> getKeyPressedHandler() {
 		EventHandler<KeyEvent> KeyPressedHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event){
-				if (!Busy) {
-					final int milliseconds = 100;
-					
-					Busy = true;
-					
-					if (event.getCode() == KeyCode.W) {	 
-		                MoveUp(milliseconds);
-		            }
-		            else if (event.getCode() == KeyCode.A) {
-		            	MoveLeft(milliseconds);
-		            }
-		            else if (event.getCode() == KeyCode.S) {	            	
-		            	MoveDown(milliseconds);
-		            }
-		            else if (event.getCode() == KeyCode.D) {
-		            	MoveRight(milliseconds);
-		            }
-				}
+				final int milliseconds = 100;
+				
+				if (event.getCode() == KeyCode.W) {	 
+	                MoveUp(milliseconds);
+	            }
+	            else if (event.getCode() == KeyCode.A) {
+	            	MoveLeft(milliseconds);
+	            }
+	            else if (event.getCode() == KeyCode.S) {	            	
+	            	MoveDown(milliseconds);
+	            }
+	            else if (event.getCode() == KeyCode.D) {
+	            	MoveRight(milliseconds);
+	            }
 			}
 		};
 		
@@ -251,8 +242,6 @@ public class Frogger extends Player {
 		Transition PauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds));
 		
 		SequentialTransition animation = new SequentialTransition(MovementAnimation, PauseAfterAnimation);
-		
-		animation.setOnFinished(event -> { Busy = false; });
 		
 		animation.play();
 	}

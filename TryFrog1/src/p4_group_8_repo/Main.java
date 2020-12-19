@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
-	private MyStage window;
+	private AudioPlayer window;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -20,19 +20,13 @@ public class Main extends Application {
 	
 		StackPane root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		
-		Pane gameScreen = FXMLLoader.load(getClass().getResource("GameScreen.fxml"));
-		
 		primaryStage.setTitle("Frogger");
 		
-	    window = new MyStage();
+	    //window = new MyStage();
 	    
-	    root.getChildren().add(gameScreen);
+	    //window.getChildren().add(root);
 	    
-	    gameScreen.toBack();
-	    
-	    window.getChildren().add(root);
-	    
-	    Scene scene  = new Scene(window,600,900);
+	    Scene scene  = new Scene(root,600,900);
 	    
 		primaryStage.setScene(scene);
 		

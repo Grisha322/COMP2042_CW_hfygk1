@@ -1,9 +1,16 @@
 package p4_group_8_repo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -46,14 +53,11 @@ public class Controller{
 	@FXML
     public void initialize() {
 		
-		LevelSettings levelSettings = LevelOneSettings.getInstance();
-		ActorGroupAdder GroupAdder = new ActorGroupAdder();
 		Game game = Game.getInstance();
 		
-		addCars(GroupAdder, levelSettings);
-		addTracks(GroupAdder, levelSettings);
-		addTurtles(GroupAdder, levelSettings);
-		addLogs(GroupAdder, levelSettings);
+		ActorGroupAdder GroupAdder = new ActorGroupAdder();
+		
+		generateObstacles(GroupAdder, game.getCurrentLevel());
 		
 		final List<Actor> lifes = addLifes(GroupAdder);
 		final List<Actor> finals = addFinals(GroupAdder);
@@ -69,8 +73,78 @@ public class Controller{
 		game.setScoreDisplay(scoreDisplay);
 		game.setTimeLeftDisplay(timeDisplay);
 		game.setLevelDisplay(levelDisplay);
-		//game.start();
+		game.setGameSpaceActorSet(getActors(gameSpace));
+		game.setGameScreen(root);
+		addKeyEventListener(gameSpace);
+		
+		game.start();
     }
+	
+	private void addKeyEventListener(Pane pane){
+		List<Actor> ActorSet = getActors(pane);
+		pane.sceneProperty().addListener(new ChangeListener<Scene>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
+				if (newValue != null) {
+					newValue.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+						@Override
+						public void handle(KeyEvent event) {
+							if(pane.getOnKeyReleased() != null) 
+								pane.getOnKeyReleased().handle(event);
+							for (Actor anActor: ActorSet) {
+								if (anActor.getOnKeyReleased() != null) {
+									anActor.getOnKeyReleased().handle(event);
+								}
+							}
+						}
+						
+					});
+					
+					newValue.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+						@Override
+						public void handle(KeyEvent event) {
+							if(pane.getOnKeyPressed() != null) 
+								pane.getOnKeyPressed().handle(event);
+							for (Actor anActor: ActorSet) {
+								if (anActor.getOnKeyPressed() != null) {
+									anActor.getOnKeyPressed().handle(event);
+								}
+							}
+						}
+						
+					});
+				}
+				
+			}
+    		
+		});
+	}
+	
+	private List<Actor> getActors(Pane pane) {
+        ArrayList<Actor> someArray = new ArrayList<Actor>();
+        for (Node node: pane.getChildren()) {
+        	if(node instanceof Pane) {
+        		someArray.addAll(getActors((Pane)node));
+        	}
+        	else if (node instanceof Actor) {
+                someArray.add((Actor)node);
+            }
+        }
+        return someArray;
+    }
+	
+	private void generateObstacles(ActorGroupAdder GroupAdder, Level level) {
+		LevelSettingsBuilder builder = LevelSettingsBuilder.getInstance();
+		LevelSettings levelSettings = builder.getLevelSettings(level);
+		
+		addCars(GroupAdder, levelSettings);
+		addTracks(GroupAdder, levelSettings);
+		addTurtles(GroupAdder, levelSettings);
+		addLogs(GroupAdder, levelSettings);
+	}
 	
 	private void addCars(ActorGroupAdder GroupAdder, LevelSettings settings) {
 		GroupAdder.initiActorGroupAdder("MovingObstacleFactory", "Car", "file:src/p4_group_8_repo/car1Left.png");

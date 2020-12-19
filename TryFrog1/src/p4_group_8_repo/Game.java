@@ -1,49 +1,60 @@
 package p4_group_8_repo;
 
+import java.awt.Button;
 import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Pane;
 
 public class Game {
 	
 	private static Game instance = new Game();
 	private Level currentLevel;
 	private AnimationTimer timer;
+	private List<Actor> gameSpaceActorSet = new ArrayList<Actor>();
 	private List<Final> finals = new ArrayList<Final>();
 	private List<Digit> scoreDisplay = new ArrayList<Digit>();
 	private List<Digit> levelDisplay = new ArrayList<Digit>();
 	private List<Digit> timeLeftDisplay = new ArrayList<Digit>();
 	private Player player;
-	private MyStage window = new MyStage();
+	private AudioPlayer audioPlayer = new AudioPlayer();
 	private int timeLeft;
+	private Pane gameScreen;
 	
 	private Game() {
-		currentLevel = Level.ONE;
-		window.playMusic();
-	}
-	
-	private int levelToNum(Level level) {
-		int number = 0;
-		if(level.equals(Level.ONE)) {
-			number = 1;
-		}
-		else if(level.equals(Level.TWO)) {
-			number = 2;
-		}
-		else if(level.equals(Level.THREE)) {
-			number = 3;
-		}
-		else if(level.equals(Level.NOTSET)) {
-			number = 0;
-		}
-		return number;
+		currentLevel = Level.NOTSET;
+		audioPlayer.playMusic();
 	}
 	
 	public static Game getInstance() {
 		return instance;
+	}
+	
+	public void setGameSpaceActorSet(List<Actor> actors) {
+		gameSpaceActorSet.addAll(actors);
+	}
+	
+	public List<Actor> getGameSpaceActorSet() {
+		return gameSpaceActorSet;
+	}
+	
+	public Level getCurrentLevel() {
+		return currentLevel;
+	}
+	
+	public void setGameScreen(Pane gameScreen) {
+		this.gameScreen = gameScreen;
+	}
+	
+	public Pane getGameScreen() {
+		return gameScreen;
+	}
+	
+	public void setCurrentlLevel(Level level) {
+		currentLevel = level;
 	}
 	
 	public void setPlayer(Actor player) {
@@ -95,16 +106,19 @@ public class Game {
         	
             @Override
             public void handle(long now) {
+            	for (Actor anActor: gameSpaceActorSet) {
+                	anActor.act();
+                }
             	handleScoreChanges();
-            	handleLevelPassed();
             	lastTime = handleLevelTimer(now, lastTime);
+            	handleGameEnd();
             }
             
         };
     }
 	
 	public void toggleMusic(boolean value) {
-		window.setMusicOff(value);
+		audioPlayer.setMusicOff(value);
 	}
 	
 	private void handleScoreChanges() {
@@ -113,21 +127,42 @@ public class Game {
     	}
 	}
 	
-	private void handleLevelPassed() {
+	private void handleGameEnd() {
+		String title = "";
+		String headerText = "";
 		if (levelPassed()) {
-    		System.out.print("STOPP:");
-    		window.stopMusic();
-    		stop();
-    		window.stop();
-    		stop();
-    		Alert alert = new Alert(AlertType.INFORMATION);
-    		alert.setTitle("You Have Won The Game!");
-    		alert.setHeaderText("Your Score: " + player.getPoints() +"!");
-    		alert.setContentText("Highest Possible Score: 800");
-    		alert.show();
+			if(currentLevel.levelToInt() == 3) {
+				title = "Game Won";
+				headerText = "Congratulations, You have won the game!";
+			}
+			else {
+				title = "Level Passed";
+				headerText = "Congratulations, You have passed level " + currentLevel.levelToInt() + "!";
+			}
     	}
+		else if(timeLeft == 0) {
+			title = "Game Over";
+			headerText = "Game over! No more time left.";
+		}
+		else if(player.lifesLeft() == 0) {
+			title = "Game Over";
+			headerText = "Game over! No more lifes left.";
+		}
+		else {
+			return;
+		}
+		stop();
+		displayGameEndAlert(title, headerText);
 	}
 	
+	private void displayGameEndAlert(String title, String headerText) {
+		Button button = new Button("OK");
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(headerText);
+		alert.setContentText("");
+		
+	}
 	private long handleLevelTimer(long now, long lastTime){
 		if (lastTime != 0) {
             if (now > lastTime + 1_000_000_000) {
@@ -140,9 +175,7 @@ public class Game {
             lastTime = now;
 
         }
-		if(timeLeft == 0) {
-			
-		}
+		
 		return lastTime;
 	}
 	
@@ -151,9 +184,9 @@ public class Game {
 		
 		displayTimeLeft();
 		
-		display( levelToNum(currentLevel), levelDisplay );
+		display( currentLevel.levelToInt(), levelDisplay );
 		
-		window.playMusic();
+		audioPlayer.playMusic();
 		
     	createTimer();
     	
@@ -161,7 +194,36 @@ public class Game {
     }
 
     public void stop() {
+    	audioPlayer.stopMusic();
+    	stopGameAnimations();
         timer.stop();
+    }
+    
+    
+    public void pauseGame() {
+    	stopGameAnimations();
+        timer.stop();
+    }
+    
+    public void continueGame() {
+    	continueGameAnimations();
+        timer.start();
+    }
+    
+    public void stopGameAnimations() {
+    	for(Actor actor: gameSpaceActorSet) {
+    		if(actor instanceof animatedObject) {
+    			((animatedObject) actor).stopAnimation();
+    		}
+    	}
+    }
+    
+    public void continueGameAnimations() {
+    	for(Actor actor: gameSpaceActorSet) {
+    		if(actor instanceof animatedObject) {
+    			((animatedObject) actor).continueAnimation();
+    		}
+    	}
     }
     
     public void displayTimeLeft() {
@@ -192,4 +254,25 @@ public class Game {
     	}
     }
 	
+    public int calculatePointsTotal() {
+    	int total = 0;
+    	total += player.getPoints();
+    	total += (player.lifesLeft() * 250);
+    	total += timeLeft;
+    	total *= currentLevel.levelToInt();
+    	return total;
+    }
+    
+    public void reset() {
+    	gameSpaceActorSet.clear();
+    	finals.clear();
+    	scoreDisplay.clear();
+    	levelDisplay.clear();
+    	timeLeftDisplay.clear();
+    	player = null;
+    	audioPlayer.stopMusic();
+    	audioPlayer = null;
+    	timeLeft = 0;
+    	gameScreen = null;
+    }
 }

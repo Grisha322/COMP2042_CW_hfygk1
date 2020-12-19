@@ -8,8 +8,65 @@
 <?import javafx.scene.layout.GridPane?>
 
 
-<StackPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p4_group_8_repo.menuController">
+<StackPane fx:id="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p4_group_8_repo.menuController">
    <children>
+      <TitledPane fx:id="timeFinished" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" text="Game Over">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="195.0" layoutY="196.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="51.0" prefWidth="121.0" text="Go to Menu" />
+                  <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Unfortinately, there is no time left" wrappingWidth="482.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
+      <TitledPane fx:id="gameWin" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" text="Game won">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="189.0" layoutY="193.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="51.0" prefWidth="121.0" text="Go to Menu" />
+                  <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Congratulations, you have won the game" wrappingWidth="482.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
+      <TitledPane fx:id="lifesFinished" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" text="Game Over">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="195.0" layoutY="196.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="51.0" prefWidth="121.0" text="Go to Menu" />
+                  <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Unfortinately, there are no lifes left" wrappingWidth="482.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
+      <TitledPane fx:id="levelWin" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" text="Level passed">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="106.0" layoutY="196.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="51.0" prefWidth="121.0" text="Go to Menu" />
+                  <Button layoutX="269.0" layoutY="196.0" mnemonicParsing="false" onAction="#nextLevel" prefHeight="51.0" prefWidth="121.0" text="Continue" />
+                  <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Congratulations, you have passed this level" wrappingWidth="482.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
       <Pane fx:id="infoPage" prefHeight="900.0" prefWidth="600.0" styleClass="infoPage">
          <children>
             <Button layoutX="453.0" layoutY="636.0" mnemonicParsing="false" onAction="#openMenu" prefHeight="45.0" prefWidth="107.0" text="Back">
@@ -33,7 +90,7 @@
                         <Font name="System Italic" size="51.0" />
                      </font>
                   </Text>
-                  <Button defaultButton="true" layoutX="222.0" layoutY="257.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="157.0" text="Play">
+                  <Button defaultButton="true" layoutX="222.0" layoutY="257.0" mnemonicParsing="false" onAction="#startTheGame" prefHeight="74.0" prefWidth="157.0" text="Play">
                      <font>
                         <Font size="34.0" />
                      </font>

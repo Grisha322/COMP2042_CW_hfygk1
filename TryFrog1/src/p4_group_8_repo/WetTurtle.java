@@ -60,6 +60,8 @@ public class WetTurtle extends Turtle{
 		
 		SequentialTransition animation = new SequentialTransition(defaultAnimation, sunkAnimation, pauseBeforeAnimationCycle);
 		
+		setAnimationHandle(animation);
+		
 		animation.setCycleCount(SequentialTransition.INDEFINITE);
 		
 		animation.play();

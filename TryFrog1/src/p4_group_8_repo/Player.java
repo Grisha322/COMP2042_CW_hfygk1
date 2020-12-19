@@ -11,12 +11,11 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
-public abstract class Player extends MovingActor {
+public abstract class Player extends MovingActor implements animatedObject{
 	
 	List<Life> lifes = new ArrayList<Life>();
 	protected final double movement = 32;
 	private final double checkpoint = 0;
-	protected boolean Busy = false;
 	protected double startXPos;
 	protected double startYPos;
 	protected int totalPoints = 0;
@@ -42,13 +41,15 @@ public abstract class Player extends MovingActor {
 	
 	public void handleDeath(String deathType) {
 		List<Image> slides = getDeathSlides(deathType);
-		
-		playDeathAnimation(slides);
 		substractPoints(50);
 		removeLife();
+		playDeathAnimation(slides);
+		
 	}
 	
 	public void playDeathAnimation(List<Image> images) {
+		if(lifesLeft() > 0)
+			getGame().pauseGame();
 		
 		final int milliseconds = 500;
 		
@@ -58,7 +59,7 @@ public abstract class Player extends MovingActor {
 		
 		SequentialTransition animation = new SequentialTransition(deathAnimation, pauseAfterAnimation);
 
-		animation.setOnFinished(event -> RestoreDefaults());
+		animation.setOnFinished(event -> {RestoreDefaults(); if(lifesLeft() > 0) getGame().continueGame(); });
 		
 		animation.play();
 		
@@ -148,9 +149,6 @@ public abstract class Player extends MovingActor {
 	}
 	
 	public void RestoreDefaults(){
-		
-		Busy = false;
-		
 		setImage(ActorImage);
 		
 		setX(startXPos);

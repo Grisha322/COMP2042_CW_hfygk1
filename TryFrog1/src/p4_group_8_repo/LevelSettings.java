@@ -9,8 +9,8 @@ public abstract class LevelSettings {
 	}
 	
 	public LevelSettings() {
-		initHashMap();
+		settings = initHashMap();
 	}
 	
-	public abstract void initHashMap();
+	public abstract HashMap<LevelKeys, Double> initHashMap();
 }

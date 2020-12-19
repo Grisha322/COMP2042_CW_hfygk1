@@ -1,5 +1,6 @@
 package p4_group_8_repo;
 
+import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -10,14 +11,18 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-public class Turtle extends MovingObstacle{
-	
+public class Turtle extends MovingObstacle implements animatedObject{
+	Animation animationHandle;
 	public Turtle(String imageLink, double size, double speed) {
 		
 		super(imageLink, size, speed);
 		
 		InitAnimation();
 		
+	}
+	
+	public void setAnimationHandle(Animation animation) {
+		animationHandle = animation;
 	}
 	
 	public void InitAnimation() {
@@ -50,10 +55,22 @@ public class Turtle extends MovingObstacle{
 		
 		SequentialTransition animation = new SequentialTransition(defaultAnimation, pause);
 		
+		setAnimationHandle(animation);
+		
 		animation.setCycleCount(Transition.INDEFINITE);
 		
 		animation.play();
 		
+	}
+	
+	@Override
+	public void stopAnimation() {
+		animationHandle.pause();
+	}
+	
+	@Override
+	public void continueAnimation() {
+		animationHandle.play();
 	}
 	
 	@Override
@@ -62,4 +79,5 @@ public class Turtle extends MovingObstacle{
 		return "Turtle";
 		
 	}
+	
 }

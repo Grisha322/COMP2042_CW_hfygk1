@@ -5,14 +5,14 @@ import java.io.File;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-public class MyStage extends World{
+public class AudioPlayer{
 	private MediaPlayer mediaPlayer;
 	private boolean isPlaying = false;
 	private boolean musicOff = false;
-	public MyStage() {}
+	public AudioPlayer() {}
 	
 	public void playMusic() {
-		if(musicOff) {
+		if(musicOff || isPlaying) {
 			return;
 		}
 		String musicFile = "src/p4_group_8_repo/Frogger Main Song Theme (loop).mp3";   
@@ -24,7 +24,9 @@ public class MyStage extends World{
 	}
 	
 	public void stopMusic() {
-		mediaPlayer.stop();
+		if(isPlaying) {
+			mediaPlayer.stop();
+		}
 		isPlaying = false;
 	}
 	

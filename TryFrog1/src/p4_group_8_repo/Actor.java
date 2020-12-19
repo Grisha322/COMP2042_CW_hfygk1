@@ -28,17 +28,13 @@ public abstract class Actor extends ImageView{
 	
 	public Actor() {}
 
-    public World getWorld() {
-    	Node node = this;
-    	do {
-    		node = node.getParent();
-    	}while(!(node instanceof World));
-        return (World) node;
+    public Game getGame() {
+    	return Game.getInstance();
     }
 
     public List<Actor> getIntersectingObjects(){
         ArrayList<Actor> someArray = new ArrayList<Actor>();
-        for (Actor actor: getWorld().getActorSet()) {
+        for (Actor actor: getGame(). getGameSpaceActorSet()) {
         	
         	final boolean intersects = this.localToScene(this.getBoundsInLocal()).intersects(actor.localToScene(actor.getBoundsInLocal()));
         	
@@ -49,20 +45,7 @@ public abstract class Actor extends ImageView{
         return someArray;
     }
     
-    public Transition animate(List<Image> images, int milliseconds) {
-		Transition animation = new Transition() {
-			{
-		        setCycleDuration(Duration.millis(milliseconds)); // total time for animation
-		    }
-
-		    @Override
-		    protected void interpolate(double fraction) {
-		        final int animationSlideIndex = (int) (fraction * (images.size() - 1) );
-		        setImage(images.get(animationSlideIndex)); 
-		    }
-		};
-		return animation;
-	}
+    
 	
     public abstract void act();
     
