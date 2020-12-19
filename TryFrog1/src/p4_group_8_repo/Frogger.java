@@ -131,8 +131,9 @@ public class Frogger extends Player {
 	public EventHandler<KeyEvent> getKeyPressedHandler() {
 		EventHandler<KeyEvent> KeyPressedHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event){
-				final int milliseconds = 100;
-				
+				final int milliseconds = 50;
+				if(dead || moving)
+					return;
 				if (event.getCode() == KeyCode.W) {	 
 	                MoveUp(milliseconds);
 	            }
@@ -234,6 +235,7 @@ public class Frogger extends Player {
 	}
 	
 	public void MovementAnimationPlay(List<Image> images, int milliseconds, double moveX, double moveY) {
+		moving = true;
 		
 		Transition MovementAnimation = animate(images, milliseconds);
 		
@@ -242,6 +244,8 @@ public class Frogger extends Player {
 		Transition PauseAfterAnimation = new PauseTransition(Duration.millis(milliseconds));
 		
 		SequentialTransition animation = new SequentialTransition(MovementAnimation, PauseAfterAnimation);
+		
+		animation.setOnFinished(event -> moving = false);
 		
 		animation.play();
 	}

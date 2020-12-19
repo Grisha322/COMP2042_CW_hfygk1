@@ -87,21 +87,6 @@ public class Controller{
 			@Override
 			public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
 				if (newValue != null) {
-					newValue.setOnKeyReleased(new EventHandler<KeyEvent>() {
-
-						@Override
-						public void handle(KeyEvent event) {
-							if(pane.getOnKeyReleased() != null) 
-								pane.getOnKeyReleased().handle(event);
-							for (Actor anActor: ActorSet) {
-								if (anActor.getOnKeyReleased() != null) {
-									anActor.getOnKeyReleased().handle(event);
-								}
-							}
-						}
-						
-					});
-					
 					newValue.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 						@Override

@@ -16,6 +16,8 @@ public abstract class Player extends MovingActor implements animatedObject{
 	List<Life> lifes = new ArrayList<Life>();
 	protected final double movement = 32;
 	private final double checkpoint = 0;
+	protected boolean dead = false;
+	protected boolean moving = false;
 	protected double startXPos;
 	protected double startYPos;
 	protected int totalPoints = 0;
@@ -43,8 +45,8 @@ public abstract class Player extends MovingActor implements animatedObject{
 		List<Image> slides = getDeathSlides(deathType);
 		substractPoints(50);
 		removeLife();
+		dead = true;
 		playDeathAnimation(slides);
-		
 	}
 	
 	public void playDeathAnimation(List<Image> images) {
@@ -59,7 +61,7 @@ public abstract class Player extends MovingActor implements animatedObject{
 		
 		SequentialTransition animation = new SequentialTransition(deathAnimation, pauseAfterAnimation);
 
-		animation.setOnFinished(event -> {RestoreDefaults(); if(lifesLeft() > 0) getGame().continueGame(); });
+		animation.setOnFinished(event -> {if(lifesLeft() > 0) { getGame().continueGame(); RestoreDefaults(); }});
 		
 		animation.play();
 		
@@ -154,7 +156,11 @@ public abstract class Player extends MovingActor implements animatedObject{
 		setX(startXPos);
 		
 		setY(startYPos);
+		
+		dead = false;
 
+		moving = false;
+		
 		return;
 	}
 	

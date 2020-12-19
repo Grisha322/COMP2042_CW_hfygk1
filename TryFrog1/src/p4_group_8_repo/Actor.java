@@ -1,10 +1,7 @@
 package p4_group_8_repo;
 
 import javafx.scene.image.ImageView;
-import javafx.animation.Transition;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;

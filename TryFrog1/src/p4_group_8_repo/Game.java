@@ -1,17 +1,19 @@
 package p4_group_8_repo;
 
-import java.awt.Button;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 public class Game {
 	
 	private static Game instance = new Game();
+	private List<Integer> highScoreList = new ArrayList<Integer>();
 	private Level currentLevel;
 	private AnimationTimer timer;
 	private List<Actor> gameSpaceActorSet = new ArrayList<Actor>();
@@ -23,6 +25,17 @@ public class Game {
 	private AudioPlayer audioPlayer = new AudioPlayer();
 	private int timeLeft;
 	private Pane gameScreen;
+	private TitledPane gameWin;
+	private TitledPane levelWin;
+	private TitledPane timeFinished;
+	private TitledPane lifesFinished;
+	private Label froggerPoints;
+	private Label lifesSavedBonus;
+	private Label timeLeftBonus;
+	private Label levelMultiplier;
+	private Label totalPoints;
+	private Text highScore;
+	private Pane scoreBoard;
 	
 	private Game() {
 		currentLevel = Level.NOTSET;
@@ -31,6 +44,49 @@ public class Game {
 	
 	public static Game getInstance() {
 		return instance;
+	}
+	
+	public void setScoreBoard(Pane scoreBoard) {
+		this.scoreBoard = scoreBoard;
+	}
+	
+	public void setLevelMultiplier(Label levelMultiplier) {
+		this.levelMultiplier = levelMultiplier;
+	}
+
+	public void setFroggerPoints(Label froggerPoints) {
+		this.froggerPoints = froggerPoints;
+	}
+
+	public void setLifesSavedBonus(Label lifesSavedBonus) {
+		this.lifesSavedBonus = lifesSavedBonus;
+	}
+
+	public void setTimeLeftBonus(Label timeLeftBonus) {
+		this.timeLeftBonus = timeLeftBonus;
+	}
+
+	public void setTotalPoints(Label totalPoints) {
+		this.totalPoints = totalPoints;
+	}
+
+	public void setHighScore(Text highScore) {
+		this.highScore = highScore;
+	}
+
+	public void setGameWin(TitledPane gameWin) {
+		this.gameWin = gameWin;
+	}
+
+	public void setLevelWin(TitledPane levelWin) {
+		this.levelWin = levelWin;
+	}
+	
+	public void setTimesFinished(TitledPane timeFinished) {
+		this.timeFinished = timeFinished;
+	}
+	public void setLifesFinished(TitledPane lifesFinished) {
+		this.lifesFinished = lifesFinished;
 	}
 	
 	public void setGameSpaceActorSet(List<Actor> actors) {
@@ -128,41 +184,28 @@ public class Game {
 	}
 	
 	private void handleGameEnd() {
-		String title = "";
-		String headerText = "";
 		if (levelPassed()) {
-			if(currentLevel.levelToInt() == 3) {
-				title = "Game Won";
-				headerText = "Congratulations, You have won the game!";
+			if(currentLevel.elementsLeft()) {
+				levelWin.toFront();
 			}
 			else {
-				title = "Level Passed";
-				headerText = "Congratulations, You have passed level " + currentLevel.levelToInt() + "!";
+				gameWin.toFront();
 			}
     	}
 		else if(timeLeft == 0) {
-			title = "Game Over";
-			headerText = "Game over! No more time left.";
+			timeFinished.toFront();
 		}
 		else if(player.lifesLeft() == 0) {
-			title = "Game Over";
-			headerText = "Game over! No more lifes left.";
+			lifesFinished.toFront();
 		}
 		else {
 			return;
 		}
 		stop();
-		displayGameEndAlert(title, headerText);
+		fillScoreBoard();
+		scoreBoard.toFront();
 	}
 	
-	private void displayGameEndAlert(String title, String headerText) {
-		Button button = new Button("OK");
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(headerText);
-		alert.setContentText("");
-		
-	}
 	private long handleLevelTimer(long now, long lastTime){
 		if (lastTime != 0) {
             if (now > lastTime + 1_000_000_000) {
@@ -255,23 +298,76 @@ public class Game {
     }
 	
     public int calculatePointsTotal() {
+    	final boolean gameLost = notActiveFinalsLeft() > 0;
+    	
+    	final int eachLifeSavedBonus = 250;
+    	
     	int total = 0;
+    	
     	total += player.getPoints();
-    	total += (player.lifesLeft() * 250);
-    	total += timeLeft;
+    	
+    	total += (gameLost ? 0 : player.lifesLeft() * eachLifeSavedBonus);
+    	
+    	total += (gameLost ? 0 : timeLeft);
+    	
     	total *= currentLevel.levelToInt();
+    	
     	return total;
     }
     
-    public void reset() {
+   private void fillScoreBoard() {
+    	final boolean gameLost = notActiveFinalsLeft() > 0;
+    	
+    	final int eachLifeSavedBonus = 250;
+    	
+    	final int total = calculatePointsTotal();
+    	
+    	froggerPoints.setText("" + player.getPoints());
+    	
+    	lifesSavedBonus.setText("" + (gameLost ? 0 : player.lifesLeft() * eachLifeSavedBonus) );
+    	
+    	timeLeftBonus.setText("" +  (gameLost ? 0 : timeLeft));
+    	
+    	levelMultiplier.setText("X" + currentLevel.levelToInt());
+    	
+    	totalPoints.setText("" + total);
+    	
+    	updateHighScoreList(total);
+    	
+    	displayHighScoreBoard();
+    	
+    }
+    
+    private void updateHighScoreList(Integer total) {
+		highScoreList.add(total);
+		
+		Collections.sort(highScoreList, Collections.reverseOrder());
+		
+		if(highScoreList.size() > 3) {
+			highScoreList.subList(3, highScoreList.size()).clear();
+		}
+	}
+
+    private void displayHighScoreBoard() {
+    	String highScoreBoard = "";
+    	
+    	Integer iterator = 1;
+    	
+    	for(Integer num: highScoreList) {
+    		highScoreBoard += (iterator.toString() + ".\t" + num.toString() + "\n");
+    		iterator++;
+    	}
+    	
+    	highScore.setText(highScoreBoard);
+    }
+    
+	public void reset() {
     	gameSpaceActorSet.clear();
     	finals.clear();
     	scoreDisplay.clear();
     	levelDisplay.clear();
     	timeLeftDisplay.clear();
     	player = null;
-    	audioPlayer.stopMusic();
-    	audioPlayer = null;
     	timeLeft = 0;
     	gameScreen = null;
     }

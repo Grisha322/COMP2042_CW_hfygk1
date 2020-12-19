@@ -1,13 +1,12 @@
 package p4_group_8_repo;
 
 import java.io.IOException;
-import java.util.*;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -28,11 +27,36 @@ public class menuController {
 	TitledPane timeFinished;
 	@FXML
 	TitledPane lifesFinished;
+	@FXML
+	Label froggerPoints;
+	@FXML
+	Label lifesSavedBonus;
+	@FXML
+	Label timeLeftBonus;
+	@FXML
+	Label levelMultiplier;
+	@FXML
+	Label totalPoints;
+	@FXML
+	Text highScore;
+	@FXML
+	Pane scoreBoard;
 	Game game;
 	@FXML
     public void initialize() {
 		game = Game.getInstance();
 		musicText.setText("ON");
+		game.setLifesFinished(lifesFinished);
+		game.setTimesFinished(timeFinished);
+		game.setLevelWin(levelWin);
+		game.setGameWin(gameWin);
+		game.setFroggerPoints(froggerPoints);
+		game.setHighScore(highScore);
+		game.setLevelMultiplier(levelMultiplier);
+		game.setLifesSavedBonus(lifesSavedBonus);
+		game.setTimeLeftBonus(timeLeftBonus);
+		game.setTotalPoints(totalPoints);
+		game.setScoreBoard(scoreBoard);
     }
 	
 	@FXML
