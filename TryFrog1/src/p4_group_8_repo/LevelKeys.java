@@ -1,5 +1,10 @@
 package p4_group_8_repo;
 
+/**
+ * This enum holds keys that identify specific values of level settings
+ * @author hfygk1
+ *
+ */
 public enum LevelKeys {
 	AMOUNT_OF_TRACKS,
 	SPEED_OF_TRACKS,

@@ -2,15 +2,30 @@ package p4_group_8_repo;
 
 import java.util.HashMap;
 
+/**
+ * This is a producer of level settings instances. It simplifies addition of new levels.
+ * @author hfygk1
+ *
+ */
 public class LevelSettingsBuilder {
+	
 	private static LevelSettingsBuilder instance = new LevelSettingsBuilder();
 	
 	private LevelSettingsBuilder() {}
 	
+	/**
+	 * accessing the Singleton object
+	 * @return returns a singleton instance of LevelSettingsBuilder
+	 */
 	public static LevelSettingsBuilder getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * for each level requested a constructor is called, that generates an instance of a level settings with a specific hashmap
+	 * @param level element of a Level enum
+	 * @return returns complete instance of levelSettings
+	 */
 	public LevelSettings getLevelSettings(Level level) {
 		LevelSettings levelSettings = null;
 		

@@ -1,5 +1,10 @@
 package p4_group_8_repo;
 
+/**
+ * This is a factory that produces static actors
+ * @author hfygk1
+ *
+ */
 public class StaticFactory implements ActorFactory{
 
 	public Actor getActor(String staticActorName, String imageLink, double size) {

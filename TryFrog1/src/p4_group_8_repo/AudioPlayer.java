@@ -4,14 +4,22 @@ import java.io.File;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
+/**
+ * This is a wrapper class for mediaPlayer. It is used to play background music. Also supports muting function
+ * @author hfygk1
+ *
+ */
 public class AudioPlayer{
 	private MediaPlayer mediaPlayer;
 	private boolean isPlaying = false;
 	private boolean musicOff = false;
 	public AudioPlayer() {}
 	
+	/**
+	 * Starts the music, if musicOff flag is not set to true
+	 */
 	public void playMusic() {
+		//if audio is muted, music won't even start playing
 		if(musicOff || isPlaying) {
 			return;
 		}
@@ -23,6 +31,9 @@ public class AudioPlayer{
 	    isPlaying = true;
 	}
 	
+	/**
+	 * Stops music.
+	 */
 	public void stopMusic() {
 		if(isPlaying) {
 			mediaPlayer.stop();
@@ -30,6 +41,10 @@ public class AudioPlayer{
 		isPlaying = false;
 	}
 	
+	/**
+	 * Mutes and unmutes the music.
+	 * @param value of mute flag, true for muting and false for unmuting
+	 */
 	public void setMusicOff(boolean value) {
 		musicOff = value;
 		if(isPlaying && value) {

@@ -11,20 +11,33 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-public class Turtle extends MovingObstacle implements animatedObject{
+/**
+ * This class defines turtles.
+ * @author hfygk1
+ *
+ */
+public class Turtle extends MovingObstacle implements AnimatedObject{
 	Animation animationHandle;
 	public Turtle(String imageLink, double size, double speed) {
 		
 		super(imageLink, size, speed);
-		
+		//Turtles are in an infinite animation cycle from their creation, to game end
 		InitAnimation();
 		
 	}
 	
+	/**
+	 * setting animation handle, that is used to control animation
+	 * @param animation infinite animation ,that has to be saved to a handle
+	 */
 	public void setAnimationHandle(Animation animation) {
 		animationHandle = animation;
 	}
 	
+	
+	/*
+	 * This method initializes animation of the turtle
+	 */
 	public void InitAnimation() {
 		
 		final int milliseconds = 3000;
@@ -47,6 +60,11 @@ public class Turtle extends MovingObstacle implements animatedObject{
 		
 	}
 	
+	/**
+	 * This method executes animation
+	 * @param images Slides for animations
+	 * @param milliseconds duration of each animation slide in milliseconds
+	 */
 	public void PlayAnimation(List<Image> images, int milliseconds) {
 		
 		Transition defaultAnimation = animate(images, milliseconds);

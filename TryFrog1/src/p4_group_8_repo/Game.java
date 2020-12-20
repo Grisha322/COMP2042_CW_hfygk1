@@ -10,6 +10,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+//This class is a controller class for the game processing.
 public class Game {
 	
 	private static Game instance = new Game();
@@ -37,14 +38,18 @@ public class Game {
 	private Text highScore;
 	private Pane scoreBoard;
 	
-	private Game() {
+	//Game is a Singleton Object
+	private Game(){
 		currentLevel = Level.NOTSET;
 		audioPlayer.playMusic();
+		
 	}
 	
 	public static Game getInstance() {
 		return instance;
 	}
+	
+	//Setters for all the fields and Getter for some.
 	
 	public void setScoreBoard(Pane scoreBoard) {
 		this.scoreBoard = scoreBoard;
@@ -123,16 +128,6 @@ public class Game {
 		}
 	}
 	
-	public int notActiveFinalsLeft() {
-		int counter = finals.size();
-		for(Final finale: finals) {
-			if(finale.isActivated()) {
-				counter--;
-			}
-		}
-		return counter;
-	}
-	
 	public void setScoreDisplay(List<Actor> scoreDisplay) {
 		final int index = 0;
 		for(Actor actor: scoreDisplay) {
@@ -151,10 +146,24 @@ public class Game {
 			this.levelDisplay.add((Digit) actor);
 		}
 	}
-	public boolean levelPassed() {
+	
+	//This method checks for the amount of non activated Finals.
+	public int notActiveFinalsLeft() {
+		int counter = finals.size();
+		for(Final finale: finals) {
+			if(finale.isActivated()) {
+				counter--;
+			}
+		}
+		return counter;
+	}
+	
+	//This method checks if the round was won
+	public boolean roundWon() {
 		return notActiveFinalsLeft() == 0;
 	}
 	
+	//This method creates a game timer. Every tick, act method of each actor is called plus game state is managed 
 	public void createTimer() {
         timer = new AnimationTimer() {
         	
@@ -173,18 +182,22 @@ public class Game {
         };
     }
 	
+	//This method is used to mute audioPlayer
 	public void toggleMusic(boolean value) {
 		audioPlayer.setMusicOff(value);
 	}
 	
+	//This method handles players score changed, by displaying it on a score display
 	private void handleScoreChanges() {
 		if (player.scoreChanged()) {
     		display(player.getPoints(), scoreDisplay);
     	}
 	}
 	
+	//This method checks and handles game end
 	private void handleGameEnd() {
-		if (levelPassed()) {
+		//An appropriate scene is displayed according to end game scenario
+		if (roundWon()) {
 			if(currentLevel.elementsLeft()) {
 				levelWin.toFront();
 			}
@@ -202,12 +215,15 @@ public class Game {
 			return;
 		}
 		stop();
+		//after each round regardless of results fill up the scoreboard and display it
 		fillScoreBoard();
 		scoreBoard.toFront();
 	}
 	
+	//Update round timer according to game timer
 	private long handleLevelTimer(long now, long lastTime){
 		if (lastTime != 0) {
+			//each second is 1_000_000_000 ticks
             if (now > lastTime + 1_000_000_000) {
                 timeLeft--;
                 displayTimeLeft();
@@ -222,6 +238,7 @@ public class Game {
 		return lastTime;
 	}
 	
+	//this method Starts game
 	public void start() {
 		timeLeft = 300;
 		
@@ -235,40 +252,45 @@ public class Game {
     	
         timer.start();
     }
-
+	
+	//this method Stops game
     public void stop() {
     	audioPlayer.stopMusic();
     	stopGameAnimations();
         timer.stop();
     }
     
-    
+    //this method pauses game
     public void pauseGame() {
     	stopGameAnimations();
         timer.stop();
     }
     
+    //this method continue game
     public void continueGame() {
     	continueGameAnimations();
         timer.start();
     }
     
+    //Stop all animations
     public void stopGameAnimations() {
     	for(Actor actor: gameSpaceActorSet) {
-    		if(actor instanceof animatedObject) {
-    			((animatedObject) actor).stopAnimation();
+    		if(actor instanceof AnimatedObject) {
+    			((AnimatedObject) actor).stopAnimation();
     		}
     	}
     }
     
+    //Continue all animations
     public void continueGameAnimations() {
     	for(Actor actor: gameSpaceActorSet) {
-    		if(actor instanceof animatedObject) {
-    			((animatedObject) actor).continueAnimation();
+    		if(actor instanceof AnimatedObject) {
+    			((AnimatedObject) actor).continueAnimation();
     		}
     	}
     }
     
+    //Update timer display with a time left
     public void displayTimeLeft() {
     	int timeLeft = this.timeLeft;
     	
@@ -286,47 +308,48 @@ public class Game {
     	
     	secondsSecondDigit.setDigit(timeLeft % 10);
     }
+    
+    //Set normal integers on an appropriate display
     public void display(int number, List<Digit> display) {
     	
     	for(Digit Digit: display) {
+    		//obtain last digit
     		final int digit = number % 10;
     		
     		Digit.setDigit(digit);
-    		
+    		//reduce the number with one digit
     		number /= 10;
     	}
     }
 	
+    //This method calculates total number of points for the round
     public int calculatePointsTotal() {
-    	final boolean gameLost = notActiveFinalsLeft() > 0;
-    	
     	final int eachLifeSavedBonus = 250;
     	
     	int total = 0;
     	
     	total += player.getPoints();
+    	//Adding bonuses for the round win
+    	total += (roundWon() ? player.lifesLeft() * eachLifeSavedBonus : 0);
     	
-    	total += (gameLost ? 0 : player.lifesLeft() * eachLifeSavedBonus);
-    	
-    	total += (gameLost ? 0 : timeLeft);
-    	
+    	total += (roundWon() ? timeLeft : 0);
+    	//Points are multiplied according to the level difficulty
     	total *= currentLevel.levelToInt();
     	
     	return total;
     }
     
-   private void fillScoreBoard() {
-    	final boolean gameLost = notActiveFinalsLeft() > 0;
-    	
+    //This method fills labels of the scoreBoard and then displays it
+    private void fillScoreBoard() {   	
     	final int eachLifeSavedBonus = 250;
     	
     	final int total = calculatePointsTotal();
     	
     	froggerPoints.setText("" + player.getPoints());
     	
-    	lifesSavedBonus.setText("" + (gameLost ? 0 : player.lifesLeft() * eachLifeSavedBonus) );
+    	lifesSavedBonus.setText("" + (roundWon() ? player.lifesLeft() * eachLifeSavedBonus : 0) );
     	
-    	timeLeftBonus.setText("" +  (gameLost ? 0 : timeLeft));
+    	timeLeftBonus.setText("" +  (roundWon() ? timeLeft : 0));
     	
     	levelMultiplier.setText("X" + currentLevel.levelToInt());
     	
@@ -338,16 +361,18 @@ public class Game {
     	
     }
     
+    //Update HighScore list with a value for this round
     private void updateHighScoreList(Integer total) {
 		highScoreList.add(total);
-		
+		//Sort a list in a descending order
 		Collections.sort(highScoreList, Collections.reverseOrder());
-		
+		//Truncate the list to keep only three best results
 		if(highScoreList.size() > 3) {
 			highScoreList.subList(3, highScoreList.size()).clear();
 		}
 	}
-
+    
+    //Display high score board
     private void displayHighScoreBoard() {
     	String highScoreBoard = "";
     	
@@ -361,6 +386,7 @@ public class Game {
     	highScore.setText(highScoreBoard);
     }
     
+    //This method is used to reset actor handles, to prepare for the next game
 	public void reset() {
     	gameSpaceActorSet.clear();
     	finals.clear();

@@ -14,7 +14,11 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 
 
-
+/**
+ * This class is used to specialize Player interface.
+ * @author hfygk1
+ *
+ */
 public class Frogger extends Player {
 	
 	public Frogger(String imageLink, double size, double startXPos, double startYPos, List<Actor> lifes) {
@@ -23,15 +27,21 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * Overriding act method of an actor subclass
+	 */
 	@Override
 	public void act() {
-		
+		//Every tick, frogger makes sure it is not out of bounds and also handles interations with other actors
 		HandleOutOfBoundsEvent();
 		
 		HandleInteractions();
 		
 	}
 	
+	/**
+	 * Handling interactions with other actors
+	 */
 	public void HandleInteractions() {
 		List<Actor> actors = getIntersectingObjects();
 		
@@ -39,20 +49,28 @@ public class Frogger extends Player {
 		
 		final boolean noInteractions = actors.isEmpty();
 		
+		//If frogger is in the water and doesn't interract with any actor, then it will sink
 		if(ReachedWater && noInteractions) {
 			handleDeath("Waterdeath");
 			return;
 		}
 		
+		//If there are interactions identified, handle each of them
 		for(Actor actor : actors) {
 			HandleInteraction(actor);
 		}
 	}
 	
+	@Override
 	public void stopAnimation() {}
 	
+	@Override
 	public void continueAnimation() {}
 	
+	/**
+	 * Handles interactions with each separate actor
+	 * @param actor Actor with whom interaction is found
+	 */
 	public void HandleInteraction(Actor actor) {
 		final String actorName = actor.getActorClassName();
 		
@@ -80,10 +98,18 @@ public class Frogger extends Player {
 		}
 	}
 	
+	/**
+	 * Describes interaction with moving obstacles
+	 * @param obstacle MovingObstacle to be interacted 
+	 */
 	public void RideObstacle(MovingObstacle obstacle) {
 		moveX(obstacle.getSpeed());
 	}
 	
+	/**
+	 * Initializing slides for car death animation 
+	 * @return returns slides for animation
+	 */
 	public List<Image> getCarDeathSlides() {
 		final Image carDeathFirstSlide = new Image("file:src/p4_group_8_repo/cardeath1.png", size, size, true, true);
 		
@@ -103,6 +129,10 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * Initializing slides for water death animation 
+	 * @return returns slides for animation
+	 */
 	public List<Image> getWaterDeathSlides() {
 		
 		final Image waterDeathFirstSlide = new Image("file:src/p4_group_8_repo/waterdeath1.png", size,size , true, true);
@@ -127,6 +157,9 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * KeyPressed Event handler
+	 */
 	@Override
 	public EventHandler<KeyEvent> getKeyPressedHandler() {
 		EventHandler<KeyEvent> KeyPressedHandler = new EventHandler<KeyEvent>() {
@@ -152,8 +185,11 @@ public class Frogger extends Player {
 		return KeyPressedHandler;
 	}
 	
+	/**
+	 * Moving up action
+	 * @param milliseconds duration of each animation slide
+	 */
 	public void MoveUp(int milliseconds) {
-		
 		moveY(-movement);
 		
 		final boolean passedCheckPoint = getY() < currentCheckpoint;
@@ -180,6 +216,10 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * Moving down action
+	 * @param milliseconds duration of each animation slide
+	 */
 	public void MoveDown(int milliseconds) {
 		
 		moveY(movement);
@@ -198,6 +238,10 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * Moving left action
+	 * @param milliseconds duration of each animation slide
+	 */
 	public void MoveLeft(int milliseconds) {
 	
 		moveX(-movement);
@@ -216,6 +260,10 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * Moving right action
+	 * @param milliseconds duration of each animation slide
+	 */
 	public void MoveRight(int milliseconds) {
 		
 		moveX(movement);
@@ -234,6 +282,13 @@ public class Frogger extends Player {
 		
 	}
 	
+	/**
+	 * playing movement animation
+	 * @param images slides for animation
+	 * @param milliseconds duration of each cycle
+	 * @param moveX horizontal movement
+	 * @param moveY vertical movement
+	 */
 	public void MovementAnimationPlay(List<Image> images, int milliseconds, double moveX, double moveY) {
 		moving = true;
 		
@@ -256,7 +311,10 @@ public class Frogger extends Player {
 		return "Animal";
 		
 	}
-
+	
+	/**
+	 * This method returns slides for death animation
+	 */
 	@Override
 	public List<Image> getDeathSlides(String deathType) {
 		final boolean waterDeath = deathType.equalsIgnoreCase("Waterdeath");

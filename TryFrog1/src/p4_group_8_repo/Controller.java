@@ -55,16 +55,19 @@ public class Controller{
 		
 		Game game = Game.getInstance();
 		
+		//initialize group adder, that adds group of actors to the pane
 		ActorGroupAdder GroupAdder = new ActorGroupAdder();
 		
+		//generate all Obstacles
 		generateObstacles(GroupAdder, game.getCurrentLevel());
 		
+		//Generate static actors and provide game class with handles to them
 		final List<Actor> lifes = addLifes(GroupAdder);
 		final List<Actor> finals = addFinals(GroupAdder);
 		final List<Actor> scoreDisplay = addDigits(GroupAdder, 5, scoreContainer);
 		final List<Actor> timeDisplay = addDigits(GroupAdder, 3, timeContainer);
 		final List<Actor> levelDisplay = addDigits(GroupAdder, 1, levelContainer);
-		
+		//Generate player
 		Actor frogger = new Frogger("file:src/p4_group_8_repo/froggerUp.png", 32, 284, 64, lifes);
 		startPane.getChildren().add((ImageView) frogger);
 		
@@ -80,6 +83,7 @@ public class Controller{
 		game.start();
     }
 	
+	//This method adds keyEvent Listener to a specified pane
 	private void addKeyEventListener(Pane pane){
 		List<Actor> ActorSet = getActors(pane);
 		pane.sceneProperty().addListener(new ChangeListener<Scene>() {
@@ -108,6 +112,7 @@ public class Controller{
 		});
 	}
 	
+	//This method returns a list of actors on a pane
 	private List<Actor> getActors(Pane pane) {
         ArrayList<Actor> someArray = new ArrayList<Actor>();
         for (Node node: pane.getChildren()) {
@@ -121,6 +126,7 @@ public class Controller{
         return someArray;
     }
 	
+	//This method generates obstacles with parameters that base on LevelSettings
 	private void generateObstacles(ActorGroupAdder GroupAdder, Level level) {
 		LevelSettingsBuilder builder = LevelSettingsBuilder.getInstance();
 		LevelSettings levelSettings = builder.getLevelSettings(level);
@@ -131,6 +137,7 @@ public class Controller{
 		addLogs(GroupAdder, levelSettings);
 	}
 	
+	//This method adds Cars with a specific level settings to the pane using Group Adder
 	private void addCars(ActorGroupAdder GroupAdder, LevelSettings settings) {
 		GroupAdder.initiActorGroupAdder("MovingObstacleFactory", "Car", "file:src/p4_group_8_repo/car1Left.png");
 		GroupAdder.setSize(50);
@@ -147,6 +154,7 @@ public class Controller{
 		GroupAdder.AddToLine(roadPane4);
 	}
 	
+	//This method adds Tracks (Cars with a bigger size) with a specific level settings to the pane using Group Adder
 	private void addTracks(ActorGroupAdder GroupAdder, LevelSettings settings) {
 		
 		GroupAdder.initiActorGroupAdder("MovingObstacleFactory", "Car", "file:src/p4_group_8_repo/truck1Right.png");
@@ -164,6 +172,7 @@ public class Controller{
 		GroupAdder.AddToLine(roadPane3);
 	}
 	
+	//This method adds Turtles and Wet Turtles with a specific level settings to the pane using Group Adder
 	private void addTurtles(ActorGroupAdder GroupAdder, LevelSettings settings) {
 		GroupAdder.initiActorGroupAdder("MovingObstacleFactory", "Turtle", "file:src/p4_group_8_repo/TurtleAnimation2.png");
 		GroupAdder.setSize(130);
@@ -180,6 +189,7 @@ public class Controller{
 		GroupAdder.AddToLine(waterPane3);
 	}
 	
+	//This method adds Logs with a specific level settings to the pane using Group Adder
 	private void addLogs(ActorGroupAdder GroupAdder, LevelSettings settings) {
 		GroupAdder.initiActorGroupAdder("MovingObstacleFactory", "Log", "file:src/p4_group_8_repo/log2.png");
 		GroupAdder.setSize(150);
@@ -196,6 +206,7 @@ public class Controller{
 		GroupAdder.AddToLine(waterPane4);
 	}
 	
+	//This method adds Finals with a specific level settings to the pane using Group Adder, and returns handle ot the group added
 	private List<Actor> addFinals(ActorGroupAdder GroupAdder) {
 		GroupAdder.initiActorGroupAdder("StaticFactory", "Final", "file:src/p4_group_8_repo/End.png");
 		GroupAdder.setSize(64);
@@ -204,6 +215,7 @@ public class Controller{
 		return GroupAdder.AddToLine(end);
 	}
 	
+	//This method adds Lifes with a specific level settings to the pane using Group Adder, and returns handle ot the group added
 	private List<Actor> addLifes(ActorGroupAdder GroupAdder) {
 		GroupAdder.initiActorGroupAdder("StaticFactory", "Life", "file:src/p4_group_8_repo/Heart.png");
 		GroupAdder.setSize(32);
@@ -211,6 +223,7 @@ public class Controller{
 		return GroupAdder.AddToLine(lifesContainer);
 	}
 	
+	//This method adds Digits with a specific level settings to the pane using Group Adder, and returns handle ot the group added
 	private List<Actor> addDigits(ActorGroupAdder GroupAdder, int amount, Pane pane){
 		GroupAdder.initiActorGroupAdder("StaticFactory", "Digit", "file:src/p4_group_8_repo/0.png");
 		GroupAdder.setSize(32);

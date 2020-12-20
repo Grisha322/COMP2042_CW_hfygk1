@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-
+//This is a main class of the app. It launches application, by creating a window and setting the initial scene
 public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);

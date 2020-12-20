@@ -11,7 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
-public abstract class Player extends MovingActor implements animatedObject{
+/**
+ * This class describes player interface
+ * @author hfygk1
+ *
+ */
+public abstract class Player extends MovingActor implements AnimatedObject{
 	
 	List<Life> lifes = new ArrayList<Life>();
 	protected final double movement = 32;
@@ -41,6 +46,10 @@ public abstract class Player extends MovingActor implements animatedObject{
 		currentCheckpoint = checkpoint;
 	}
 	
+	/**
+	 * Handles death event
+	 * @param deathType death type of the player
+	 */
 	public void handleDeath(String deathType) {
 		List<Image> slides = getDeathSlides(deathType);
 		substractPoints(50);
@@ -49,6 +58,10 @@ public abstract class Player extends MovingActor implements animatedObject{
 		playDeathAnimation(slides);
 	}
 	
+	/**
+	 * This method is used to play death animation
+	 * @param images animation slides
+	 */
 	public void playDeathAnimation(List<Image> images) {
 		if(lifesLeft() > 0)
 			getGame().pauseGame();
@@ -66,7 +79,11 @@ public abstract class Player extends MovingActor implements animatedObject{
 		animation.play();
 		
 	}
-
+	
+	/**
+	 * Accessing lifes field
+	 * @param lifes list of Life instances
+	 */
 	public void setLifes(List<Actor> lifes) {
 		for(Actor life: lifes) {
 			final int index = 0;
@@ -75,6 +92,9 @@ public abstract class Player extends MovingActor implements animatedObject{
 		}
 	}
 	
+	/**
+	 * Makes on of the lifes inactive
+	 */
 	public void removeLife() {
 		for(Life life: lifes) {
 			if(life.isActive()) {
@@ -84,6 +104,10 @@ public abstract class Player extends MovingActor implements animatedObject{
 		}
 	}
 	
+	/**
+	 * This method check for the amount of active lifes left
+	 * @return returns number of active lifes left
+	 */
 	public int lifesLeft() {
 		int counter = 0;
 		for(Life life: lifes) {
@@ -94,20 +118,36 @@ public abstract class Player extends MovingActor implements animatedObject{
 		return counter;
 	}
 
+	/**
+	 * This method is used to deduct points
+	 * @param points to be deducted
+	 */
 	public void substractPoints(int points){
 		totalPoints = (totalPoints <= points ? 0 : (totalPoints - points));
 		scoreChanged = true;
 	}
 	
+	/**
+	 * Accessing total score
+	 * @return total score of the player
+	 */
 	public int getPoints() {
 		return totalPoints;
 	}
 	
+	/**
+	 * This method is used to add points
+	 * @param points to be added
+	 */
 	public void addPoints(int points) {
 		totalPoints += points;
 		scoreChanged = true;
 	}
 	
+	/**
+	 * Accessing scoreChanged field
+	 * @return scoreChanged
+	 */
 	public boolean scoreChanged() {
 		if (scoreChanged) {
 			scoreChanged = false;
@@ -117,6 +157,10 @@ public abstract class Player extends MovingActor implements animatedObject{
 		
 	}
 	
+	/**
+	 * Handle final reaching event
+	 * @param actorFinal instance of a Final that has been reached
+	 */
 	public void HandleFinal(Final actorFinal) {
 		if(actorFinal.isActivated()) {
 			actorFinal.deactivate();
@@ -130,6 +174,9 @@ public abstract class Player extends MovingActor implements animatedObject{
 		RestoreDefaults();
 	}
 	
+	/**
+	 * Overriding handleoutofbounds event of the MovingActor superclass
+	 */
 	@Override
 	public void HandleOutOfBoundsEvent() {
 		if (getY() > 64) {
@@ -150,6 +197,9 @@ public abstract class Player extends MovingActor implements animatedObject{
 		return "Player";
 	}
 	
+	/**
+	 * Setting position image and states to default
+	 */
 	public void RestoreDefaults(){
 		setImage(ActorImage);
 		

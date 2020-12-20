@@ -9,6 +9,11 @@ import javafx.animation.Transition;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
+/**
+ * This class describes wetTurltes
+ * @author hfygk1
+ *
+ */
 public class WetTurtle extends Turtle{
 	private boolean sunk;
 	
@@ -18,6 +23,9 @@ public class WetTurtle extends Turtle{
 		
 	}
 	
+	/**
+	 * This method initializes animation
+	 */
 	@Override
 	public void InitAnimation() {
 		
@@ -41,6 +49,9 @@ public class WetTurtle extends Turtle{
 		
 	}
 	
+	/**
+	 * Playing animation and setting the value of sunk to true when animation of sinking starts
+	 */
 	@Override
 	public void PlayAnimation(List<Image> imagesForSunkAnimation, int milliseconds) {
 		
@@ -75,6 +86,10 @@ public class WetTurtle extends Turtle{
 		
 	}
 	
+	/**
+	 * Accessing the value of sunk field
+	 * @return returns valeu of sunk field
+	 */
 	public boolean isSunk() {
 		return sunk;
 	}
